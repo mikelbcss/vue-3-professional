@@ -1,3 +1,53 @@
+
+<script setup lang="ts">
+
+import { ref, reactive, computed, onMounted } from 'vue';
+import type { User } from './user';
+
+const title = ref('Perfil de Usuario Completo');
+const user = reactive<User>({
+  name: 'Juan',
+  age: 25,
+  email: 'juan@example.com',
+  address: {
+    city: 'Madrid',
+    country: 'España',
+  },
+});
+
+const updateName = () => {
+  user.name = 'María';
+};
+
+const incrementAge = () => {
+  user.age++;
+};
+
+const updateEmail = () => {
+  user.email = 'maria@example.com';
+};
+
+const updateAddress = () => {
+  user.address.city = 'Barcelona';
+  user.address.country = 'España';
+};
+
+const reset = () => {
+  user.name = 'Juan';
+  user.age = 25;
+  user.email = 'juan@example.com';
+  user.address.city = 'Madrid';
+  user.address.country = 'España';
+};
+
+const isAdult = computed(() => {
+  return user.age >= 18;
+});
+const totalFields = computed(() => {
+  return Object.keys(user).length + Object.keys(user.address).length;
+});
+</script>
+
 <template>
   <div>
     <h2>{{ title }}</h2>
@@ -15,52 +65,3 @@
     <p>Total de campos: {{ totalFields }}</p>
   </div>
 </template>
-
-<script>
-export default {
-  data() {
-    return {
-      title: 'Perfil de Usuario Completo',
-      user: {
-        name: 'Juan',
-        age: 25,
-        email: 'juan@example.com',
-        address: {
-          city: 'Madrid',
-          country: 'España',
-        },
-      },
-    };
-  },
-  methods: {
-    updateName() {
-      this.user.name = 'María';
-    },
-    incrementAge() {
-      this.user.age++;
-    },
-    updateEmail() {
-      this.user.email = 'maria@example.com';
-    },
-    updateAddress() {
-      this.user.address.city = 'Barcelona';
-      this.user.address.country = 'España';
-    },
-    reset() {
-      this.user.name = 'Juan';
-      this.user.age = 25;
-      this.user.email = 'juan@example.com';
-      this.user.address.city = 'Madrid';
-      this.user.address.country = 'España';
-    },
-  },
-  computed: {
-    isAdult() {
-      return this.user.age >= 18;
-    },
-    totalFields() {
-      return Object.keys(this.user).length + Object.keys(this.user.address).length;
-    },
-  },
-};
-</script>

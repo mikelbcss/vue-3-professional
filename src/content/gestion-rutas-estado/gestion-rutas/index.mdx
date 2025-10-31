@@ -1,3 +1,5 @@
+import Exercise from './definiendo-router/Exercise.vue'
+
 # 🛣️ Gestión de Rutas con Vue Router 4
 
 Vue Router 4 representa una evolución significativa respecto a Vue Router 3, diseñado específicamente para Vue 3. En esta sección nos centraremos en las **principales diferencias** que necesitas conocer para migrar exitosamente.
@@ -247,16 +249,16 @@ const router = createRouter({
 
 ## 🎯 **Resumen de migración**
 
-| Concepto | Vue Router 3 | Vue Router 4 |
-|----------|--------------|--------------|
-| **Creación** | `new VueRouter()` | `createRouter()` |
-| **History** | `mode: 'history'` | `createWebHistory()` |
-| **Base URL** | `base: '/app/'` | `history: createWebHistory('/app/')` |
-| **Catch-all** | `path: '*'` | `path: '/:pathMatch(.*)*'` |
-| **Route actual** | `router.currentRoute` | `router.currentRoute.value` |
-| **Router ready** | `router.onReady()` | `await router.isReady()` |
-| **Scroll position** | `{ x: 0, y: 0 }` | `{ left: 0, top: 0 }` |
-| **Fallback** | `fallback: false` | ❌ Eliminado |
+| Concepto            | Vue Router 3          | Vue Router 4                         |
+|---------------------|-----------------------|--------------------------------------|
+| **Creación**        | `new VueRouter()`     | `createRouter()`                     |
+| **History**         | `mode: 'history'`     | `createWebHistory()`                 |
+| **Base URL**        | `base: '/app/'`       | `history: createWebHistory('/app/')` |
+| **Catch-all**       | `path: '*'`           | `path: '/:pathMatch(.*)*'`           |
+| **Route actual**    | `router.currentRoute` | `router.currentRoute.value`          |
+| **Router ready**    | `router.onReady()`    | `await router.isReady()`             |
+| **Scroll position** | `{ x: 0, y: 0 }`      | `{ left: 0, top: 0 }`                |
+| **Fallback**        | `fallback: false`     | ❌ Eliminado                          |
 
 ## 🚀 **Beneficios de Vue Router 4**
 
@@ -269,3 +271,5 @@ const router = createRouter({
 ---
 
 ¡En los ejercicios pondremos en práctica todos estos conceptos de migración!
+
+---

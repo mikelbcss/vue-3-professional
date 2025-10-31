@@ -1,0 +1,66 @@
+En este ejercicio migrarás un router de Vue 2 (Vue Router v3) a Vue 3 (Vue Router v4).
+
+## Objetivo
+
+- Partiendo de una configuración típica de Vue 2 con `VueRouter`, crea la versión equivalente en Vue 3 usando `createRouter` y `createWebHistory`.
+- Actualiza el uso dentro de un componente para que deje de depender de `$route`/`$router` en Options API y pase a usar `useRoute`/`useRouter` con Composition API.
+
+## Conceptos clave
+
+- `Vue.use(VueRouter)` ➜ en v4 ya no se usa; ahora se instancia el router con `createRouter()` y se registra con `app.use(router)`.
+- `new VueRouter({ mode: 'history' })` ➜ en v4 se usa `history: createWebHistory()` o `createWebHashHistory()`.
+- Catch-all `*` ➜ en v4 se usa `/:pathMatch(.*)*`.
+- `router.onReady(cb)` ➜ en v4 es `await router.isReady()`.
+- `$route`/`$router` ➜ en Composition API se accede con `useRoute()` y `useRouter()`.
+
+## Tareas
+
+1. Crea el router en Vue 3 con `createRouter` y `createWebHistory`.
+2. Declara al menos dos rutas sencillas: `/` (Home) y `/about` (About).
+3. Añade una ruta catch-all para 404 con la nueva sintaxis `/:pathMatch(.*)*`.
+4. En un componente, sustituye `$route`/`$router` por `useRoute()` y `useRouter()`.
+5. Monta la app con `createApp(App)`, registra el router con `app.use(router)` y haz `await router.isReady()` antes del `mount` si lo necesitas.
+
+## Pistas
+
+- Importa desde `vue-router`: `createRouter`, `createWebHistory` y `RouterView`, `RouterLink` si los usas directamente en plantillas.
+- Un esqueleto mínimo en Vue 3 es:
+
+```js
+import { createApp } from 'vue'
+import { createRouter, createWebHistory } from 'vue-router'
+import App from './App.vue'
+
+const routes = [
+  { path: '/', name: 'home', component: () => import('./pages/Home.vue') },
+  { path: '/about', name: 'about', component: () => import('./pages/About.vue') },
+  { path: '/:pathMatch(.*)*', name: 'not-found', component: () => import('./pages/NotFound.vue') },
+]
+
+const router = createRouter({
+  history: createWebHistory(),
+  routes,
+})
+
+const app = createApp(App)
+app.use(router)
+app.mount('#app')
+```
+
+- Dentro de un `<script setup>` puedes hacer:
+
+```vue
+<script setup>
+import { computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+
+const route = useRoute()
+const router = useRouter()
+
+const currentName = computed(() => route.name)
+
+function goHome() {
+  router.push({ name: 'home' })
+}
+</script>
+```

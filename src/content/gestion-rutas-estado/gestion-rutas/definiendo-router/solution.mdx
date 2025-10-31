@@ -1,0 +1,135 @@
+## Migrando de Vue Router v3 (Vue 2) a Vue Router v4 (Vue 3)
+
+En esta solución verás el proceso completo para migrar una configuración típica de Vue 2 + Vue Router v3 a Vue 3 + Vue Router v4.
+
+---
+
+### 1) Código original (Vue 2)
+
+```js
+// main.js (Vue 2)
+import Vue from 'vue'
+import VueRouter from 'vue-router'
+import App from './App.vue'
+import Home from './pages/Home.vue'
+import About from './pages/About.vue'
+
+Vue.use(VueRouter)
+
+const router = new VueRouter({
+  mode: 'history',
+  routes: [
+    { path: '/', name: 'home', component: Home },
+    { path: '/about', name: 'about', component: About },
+    { path: '*', name: 'not-found', component: () => import('./pages/NotFound.vue') },
+  ],
+})
+
+new Vue({
+  router,
+  render: (h) => h(App),
+}).$mount('#app')
+```
+
+Componente con Options API:
+
+```vue
+<!-- Home.vue (Options API) -->
+<template>
+  <div>
+    <h1>Home</h1>
+    <button @click="$router.push({ name: 'about' })">Ir a About</button>
+    <p>Ruta actual: {{$route.name}}</p>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'Home',
+}
+</script>
+```
+
+---
+
+### 2) Migración a Vue 3 + Vue Router v4
+
+Cambios clave:
+
+- Sustituye `Vue.use(VueRouter)` por la creación del router con `createRouter()` y el registro en la app con `app.use(router)`.
+- Sustituye `mode: 'history'` por `history: createWebHistory()` (o `createWebHashHistory()` si lo necesitas).
+- Cambia la ruta catch-all de `*` a `/:pathMatch(.*)*`.
+- Si usabas `$route`/`$router`, en Composition API usa `useRoute()` y `useRouter()`.
+
+#### main.ts
+
+```js
+// main.ts (Vue 3)
+import { createApp } from 'vue'
+import { createRouter, createWebHistory } from 'vue-router'
+import App from './App.vue'
+
+// Carga perezosa de páginas (sugerido en ejemplos)
+const routes = [
+  { path: '/', name: 'home', component: () => import('./pages/Home.vue') },
+  { path: '/about', name: 'about', component: () => import('./pages/About.vue') },
+  { path: '/:pathMatch(.*)*', name: 'not-found', component: () => import('./pages/NotFound.vue') },
+]
+
+const router = createRouter({
+  history: createWebHistory(),
+  routes,
+})
+
+const app = createApp(App)
+app.use(router)
+
+// (Opcional) Espera a que el router resuelva la primera navegación
+await router.isReady()
+
+app.mount('#app')
+```
+
+#### Home.vue con `<script setup>`
+
+```vue
+<!-- Home.vue (script setup) -->
+<script setup>
+import { computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+
+const route = useRoute()
+const router = useRouter()
+
+const currentName = computed(() => route.name)
+const goAbout = () => router.push({ name: 'about' })
+</script>
+
+<template>
+  <div>
+    <h1>Home</h1>
+    <button @click="goAbout">Ir a About</button>
+    <p>Ruta actual: {{ currentName }}</p>
+  </div>
+</template>
+```
+
+---
+
+### 3) Otros detalles a tener en cuenta
+
+- `router.currentRoute` ahora es un `ref`, por lo que debes acceder a `router.currentRoute.value` fuera de componentes si lo necesitas.
+- `onReady` desaparece; la alternativa es `router.isReady()` que devuelve una promesa.
+- Si usas scroll behavior, en v4 la posición usa `{ left, top }` en vez de `{ x, y }`.
+
+---
+
+### 4) Resultado final
+
+Con estos cambios tendrás:
+
+- Inicialización moderna con `createApp(App)`.
+- Router v4 con `createRouter` y `createWebHistory`.
+- Navegación y lectura de la ruta mediante `useRouter()` y `useRoute()` en Composition API.
+
+Esto completa la migración del ejemplo del ejercicio. ¡Buen trabajo!

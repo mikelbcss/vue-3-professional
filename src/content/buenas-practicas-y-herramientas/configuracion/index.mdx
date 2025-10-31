@@ -1,0 +1,265 @@
+# 🧰 Buenas prácticas y herramientas
+
+En este módulo exploraremos patrones, herramientas y flujos de trabajo que te ayudarán a construir y mantener aplicaciones Vue 3 profesionales. A continuación tienes guías prácticas y listas para copiar/pegar para estandarizar tu proyecto.
+
+## 🎯 Objetivos del módulo
+
+- Adoptar convenciones y patrones de código consistentes
+- Configurar herramientas de calidad (lint, format, type-check)
+- Mejorar DX con utilidades de desarrollo y depuración
+- Optimizar builds y rendimiento en producción
+
+---
+
+## 🧹 Biome (formatter + linter)
+
+Biome unifica formateo y lint en una sola herramienta, rápida y con reglas sensatas. Este proyecto ya la tiene configurada.
+
+- Configuración en `biome.json` (extracto):
+
+```json
+{
+  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+  "formatter": { "enabled": true, "indentWidth": 2, "lineWidth": 100 },
+  "linter": { "enabled": true, "rules": { "recommended": true } },
+  "javascript": {
+    "formatter": { "quoteStyle": "single", "trailingCommas": "es5" }
+  }
+}
+```
+
+- Scripts en `package.json` ya disponibles:
+
+```json
+{
+  "scripts": {
+    "lint": "biome lint .",
+    "lint:fix": "biome lint --write .",
+    "format": "biome format --write ."
+  }
+}
+```
+
+- Uso recomendado:
+
+```bash
+npm run lint
+npm run lint:fix
+npm run format
+```
+
+Consejo: ejecuta Biome en los hooks de Git para asegurar consistencia en cada commit (ver sección Lefthook).
+
+---
+
+## 🧪 TypeScript (tipado estricto + verificación fuera del bundler)
+
+Para Vue 3, usa `vue-tsc` para validar tipos sin depender del bundler.
+
+- Script ya configurado:
+
+```json
+{
+  "scripts": { "typecheck": "vue-tsc -b" }
+}
+```
+
+- Recomendaciones de `tsconfig` (extracto):
+
+```jsonc
+// tsconfig.json
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "jsx": "preserve",
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "useDefineForClassFields": true,
+    "verbatimModuleSyntax": true,
+    "types": ["node", "vite/client"],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
+  }
+}
+```
+
+- Verificación manual y continua:
+
+```bash
+npm run typecheck
+```
+
+Sugerencia: añádelo al pipeline de CI para fallar builds con errores de tipos.
+
+---
+
+## ⚡ Vite (DX rápida y builds eficientes)
+
+Vite ya está configurado en este proyecto. Buenas prácticas comunes:
+
+- Usa el plugin oficial de Vue y alias `@` a `src`.
+- Gestiona variables con ficheros `.env` y prefijo `VITE_`.
+- Activa `sourcemap` en build para diagnósticos de producción cuando sea necesario.
+
+Ejemplo de `vite.config.ts` mínimo:
+
+```text
+// vite.config.ts
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+import path from 'node:path'
+
+export default defineConfig({
+  plugins: [vue()],
+  resolve: {
+    alias: { '@': path.resolve(__dirname, 'src') },
+  },
+  build: {
+    sourcemap: false,
+    target: 'es2020',
+  },
+  server: {
+    port: 5173,
+  },
+})
+```
+
+Variables de entorno: crea `.env`, `.env.local`, `.env.production` y usa `import.meta.env.VITE_LO_QUE_SEA`.
+
+---
+
+## 🪝 Lefthook (hooks de Git rápidos y reproducibles)
+
+Este proyecto incluye `lefthook.yml` para ejecutar comprobaciones en cada commit.
+
+- Instalación de hooks en tu repo local:
+
+```bash
+npx lefthook install
+```
+
+- Configuración actual (extracto):
+
+```yaml
+pre-commit:
+  commands:
+    check:
+      glob: "*.{js,ts,cjs,mjs,d.cts,d.mts,vue,jsx,tsx,json,jsonc}"
+      run: npx @biomejs/biome check --write --no-errors-on-unmatched --files-ignore-unknown=true --colors=off {staged_files}
+      stage_fixed: true
+```
+
+Sugerencias adicionales:
+
+```yaml
+pre-push:
+  commands:
+    typecheck:
+      run: npm run typecheck
+```
+
+---
+
+## 📌 Fijar dependencias en `package.json`
+
+Fijar versiones garantiza builds reproducibles. Recomendaciones:
+
+- Usa versiones exactas (sin `^`/`~`). Este proyecto ya las usa.
+- Usa `npm ci` en CI para instalar exactamente lo declarado en `package-lock.json`.
+- Declara `engines` y (opcional) `packageManager` para alinear la versión de Node y npm.
+- Usa `overrides` para corregir sub‑dependencias vulnerables cuando sea necesario.
+
+Ejemplo:
+
+```jsonc
+{
+  "engines": { "node": ">=20 <21" },
+  "packageManager": "npm@10",
+  "overrides": {
+    "minimatch": "9.0.5"
+  }
+}
+```
+
+Instalación reproducible en local:
+
+```bash
+npm config set save-exact true   # guarda versiones exactas a futuro
+rm -rf node_modules package-lock.json
+npm install
+```
+
+En CI usa:
+
+```bash
+npm ci
+```
+
+---
+
+## 🤖 CI/CD con GitHub Actions
+
+Configura un pipeline mínimo para validar calidad y construir la app.
+
+Crea `.github/workflows/ci.yml`:
+
+```yaml
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [20]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js ${{ matrix.node }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: 'npm'
+
+      - name: Install dependencies (clean)
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Build
+        run: npm run build
+```
+
+Extensiones útiles:
+
+- Añade un job de preview con `actions/upload-artifact` para publicar el `dist/`.
+- Ejecuta tests si añades Vitest: `npm test` en un paso adicional.
+
+---
+
+## ✅ Checklist rápida
+
+- Biome funcionando y ejecutándose en hooks.
+- TypeScript estricto y `vue-tsc` en CI.
+- Vite con alias y variables de entorno.
+- Lefthook instalado en local (`npx lefthook install`).
+- Dependencias fijadas y `npm ci` en CI.
+- GitHub Actions validando lint, tipos y build.

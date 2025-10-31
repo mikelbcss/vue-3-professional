@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
+import { type Component, computed, onMounted, ref, watch } from 'vue';
 import ContentLayout from '../components/ContentLayout.vue';
 import { courseStructure } from '../data/courseStructure.ts';
 import MdxRenderer from '../components/MdxRenderer.vue';
@@ -15,7 +15,7 @@ const props = defineProps<Props>();
 
 const router = useRouter();
 
-const SectionContent = ref<unknown>(null);
+const SectionContent = ref<Component | null>(null);
 
 const module = computed(() => {
   return courseStructure.modules.find((m) => m.id === props.moduleId);
@@ -29,12 +29,17 @@ const sectionTitle = computed(() => {
   return section.value?.title || `Sección ${props.sectionId}`;
 });
 
-onMounted(async () => {
-  if (section.value) {
-    const content = await import(/* @vite-ignore */ section.value.mdxPath);
-    SectionContent.value = content.default;
-  }
-});
+async function loadContent() {
+    if (section.value) {
+      SectionContent.value = null;
+      const content = await import(/* @vite-ignore */ section.value.mdxPath);
+      SectionContent.value = content.default;
+    }
+}
+
+onMounted(loadContent);
+
+watch([() => props.moduleId, () => props.sectionId], loadContent);
 
 const navigateToExercise = (exerciseId: string) => {
   router.push(`/modules/${props.moduleId}/${section.value!.id}/${exerciseId}`);

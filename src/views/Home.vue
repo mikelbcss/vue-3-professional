@@ -176,7 +176,7 @@ const openVueDocs = () => {
                           v-for="exercise in section.exercises"
                           :key="exercise.id"
                           class="flex items-center space-x-2 p-2 rounded-md hover:bg-accent/50 cursor-pointer transition-colors"
-                          @click.stop="$router.push(`/modules/${module.id}/section-${section.id}/exercise-${exercise.id}`)"
+                          @click.stop="$router.push(`/modules/${module.id}/${section.id}/${exercise.id}`)"
                         >
                           <CheckCircle
                             v-if="exercisesStore.isExerciseCompleted(exercise.id)"

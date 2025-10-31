@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, shallowRef, watch } from 'vue';
+import { type Component, computed, onMounted, ref, shallowRef, watch } from 'vue';
 import { Check, Eye, EyeOff, Play, Square } from 'lucide-vue-next';
 import { Button, Card, CardContent } from '../components/ui';
 import ContentLayout from '../components/ContentLayout.vue';
@@ -16,9 +16,9 @@ interface Props {
 const props = defineProps<Props>();
 const exercisesStore = useExercisesStore();
 
-const ExerciseContent = ref<string>('');
-const SolutionContent = ref<string>('');
-const ExerciseComponent = shallowRef<string>('');
+const ExerciseContent = ref<Component | null>(null);
+const SolutionContent = ref<Component | null>(null);
+const ExerciseComponent = shallowRef<Component | null>(null);
 const showSolution = ref(false);
 
 const module = computed(() => {
@@ -60,9 +60,9 @@ const loadContent = async () => {
 
   try {
     // Reset content first
-    ExerciseContent.value = '';
-    SolutionContent.value = '';
-    ExerciseComponent.value = '';
+    ExerciseContent.value = null;
+    SolutionContent.value = null;
+    ExerciseComponent.value = null;
     showSolution.value = false;
 
     // Load MDX content

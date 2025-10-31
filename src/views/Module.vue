@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { type Component, computed, onMounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import ContentLayout from '../components/ContentLayout.vue';
 import { courseStructure } from '../data/courseStructure.ts';
@@ -14,15 +14,20 @@ const props = defineProps<Props>();
 
 const router = useRouter();
 
-const module = courseStructure.modules.find((m) => m.id === props.moduleId);
-const moduleContent = ref<unknown>(null);
+const module = computed(() => courseStructure.modules.find((m) => m.id === props.moduleId));
+const moduleContent = ref<Component | null>(null);
 
-onMounted(async () => {
-  if (module) {
-    const content = await import(/* @vite-ignore */ module.mdxPath);
+async function loadContent() {
+  if (module.value) {
+    moduleContent.value = null;
+    const content = await import(/* @vite-ignore */ module.value.mdxPath);
     moduleContent.value = content.default;
   }
-});
+}
+
+onMounted(loadContent);
+
+watch([() => props.moduleId], loadContent);
 
 const navigateToSection = (sectionId: string) => {
   router.push(`/modules/${props.moduleId}/${sectionId}`);

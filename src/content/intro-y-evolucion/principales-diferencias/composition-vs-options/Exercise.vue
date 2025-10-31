@@ -1,3 +1,4 @@
+
 <template>
   <div>
     <h2>{{ title }}</h2>
@@ -8,26 +9,37 @@
   </div>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      title: 'Contador Vue 2',
-      counter: 0,
-    };
-  },
-  methods: {
-    increment() {
-      this.counter++;
-    },
-    reset() {
-      this.counter = 0;
-    },
-  },
-  computed: {
-    isEven() {
-      return this.counter % 2 === 0;
-    },
-  },
-};
+<script setup lang="ts">
+
+  import { ref, computed, onMounted } from 'vue';
+
+  const title = ref('Contador Vue 3');
+  const counter = ref(0);
+
+  const isEven = computed(() => {
+    return counter.value % 2 === 0;
+  });
+
+  const setLocaldata = (value: number) => {
+    localStorage.setItem('counterValue', value.toString());
+  };
+
+  const increment = () => {
+    counter.value++;
+    setLocaldata(counter.value);
+  };
+
+  const reset = () => {
+    counter.value = 0;
+    setLocaldata(counter.value);
+  };
+
+  onMounted(() => {
+    counter.value = parseInt(localStorage.getItem('counterValue') || '0');
+  });
+
+  onMounted(() => {
+    alert(counter.value);
+  });
+
 </script>

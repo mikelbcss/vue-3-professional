@@ -1,81 +1,83 @@
 <script setup lang="ts">
 import { MDXProvider } from '@mdx-js/vue';
-import { type Component, h } from 'vue';
+import { type Component, defineComponent, h } from 'vue';
 import CodeBlock from './CodeBlock.vue';
 
 interface Props {
-  content: Component;
+  content: Component | null;
 }
 
 const props = defineProps<Props>();
 
-// custom wrapper that forwards props
-const CodeWithProps = (props: any, { slots }: any) => {
-  // Extract code content from children or slots
-  const children = props.children ?? (slots.default && slots.default());
-  let code = '';
-  let language = 'javascript';
+// Custom wrapper implemented as a proper Vue component
+const CodeWithProps = defineComponent({
+  name: 'CodeWithProps',
+  setup(p, { slots }) {
+    return () => {
+      // Extract code content from children or slots
+      const children = (p as any).children ?? (slots.default && slots.default());
+      let code = '' as string;
+      let language = 'javascript' as string;
 
-  // Handle different children structures
-  if (children) {
-    if (Array.isArray(children)) {
-      // If children is an array, look for the code element
-      const codeChild = children.find(
-        (child: any) => (child && child.type === 'code') || (child.props && child.props.className)
-      );
-      if (codeChild) {
-        if (
-          codeChild.props &&
-          codeChild.props.className &&
-          typeof codeChild.props.className === 'string'
-        ) {
-          const match = codeChild.props.className.match(/language-(\w+)/);
-          if (match) {
-            language = match[1];
+      if (children) {
+        if (Array.isArray(children)) {
+          const codeChild = children.find(
+            (child: any) => (child && child.type === 'code') || (child.props && child.props.className)
+          );
+          if (codeChild) {
+            if (
+              codeChild.props &&
+              codeChild.props.className &&
+              typeof codeChild.props.className === 'string'
+            ) {
+              const match = codeChild.props.className.match(/language-(\w+)/);
+              if (match) {
+                language = match[1];
+              }
+            }
+            if (codeChild.children) {
+              code = Array.isArray(codeChild.children)
+                ? codeChild.children.join('')
+                : codeChild.children;
+            }
           }
-        }
-        if (codeChild.children) {
-          code = Array.isArray(codeChild.children)
-            ? codeChild.children.join('')
-            : codeChild.children;
-        }
-      }
-    } else if (children.props) {
-      // MDX structure: pre > code with className like "language-vue"
-      const codeProps = children.props;
-      if (codeProps.className && typeof codeProps.className === 'string') {
-        const match = codeProps.className.match(/language-(\w+)/);
-        if (match) {
-          language = match[1];
+        } else if ((children as any).props) {
+          const codeProps = (children as any).props;
+          if (codeProps.className && typeof codeProps.className === 'string') {
+            const match = codeProps.className.match(/language-(\w+)/);
+            if (match) {
+              language = match[1];
+            }
+          }
+          if (codeProps.children) {
+            code = Array.isArray(codeProps.children)
+              ? codeProps.children.join('')
+              : codeProps.children;
+          }
+        } else if (typeof children === 'string') {
+          code = children as string;
         }
       }
 
-      // Extract the actual code content
-      if (codeProps.children) {
-        code = Array.isArray(codeProps.children) ? codeProps.children.join('') : codeProps.children;
-      }
-    } else if (typeof children === 'string') {
-      code = children;
-    }
-  }
-
-  return h(CodeBlock, {
-    code,
-    language,
-    class: props.class + ' not-prose',
-  });
-};
+      return h(CodeBlock, {
+        code,
+        language,
+        class: ((p as any).class ?? '') + ' not-prose',
+      });
+    };
+  },
+});
 
 const mdxComponents = {
   pre: CodeWithProps,
-};
+} as const;
 </script>
 
 <template>
   <article class="prose prose-sm max-w-none">
     <MDXProvider :components="mdxComponents">
       <component
-          :is="props.content"
+          :is="props.content as any"
           v-if="props.content"
           :components="mdxComponents"
       />

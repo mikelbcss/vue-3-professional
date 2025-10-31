@@ -42,8 +42,8 @@ export default {
   data() {
     return {
       todos: [],
-      newTodoText: ''
-    }
+      newTodoText: '',
+    };
   },
   methods: {
     addTodo() {
@@ -51,12 +51,12 @@ export default {
         const newTodo = {
           id: Date.now(),
           text: this.newTodoText.trim(),
-          completed: false
-        }
-        this.todos.push(newTodo)
-        this.newTodoText = ''
+          completed: false,
+        };
+        this.todos.push(newTodo);
+        this.newTodoText = '';
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>

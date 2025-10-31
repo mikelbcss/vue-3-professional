@@ -14,13 +14,19 @@ Pinia es el sucesor de Vuex que ofrece:
 
 ## ¿Por qué Pinia en lugar de Vuex?
 
-| Vuex 4 | Pinia |
-|--------|-------|
-| Mutations + Actions | Solo Actions |
-| `this.$store.dispatch()` | `store.action()` |
-| Módulos complejos | Stores simples |
-| TypeScript complejo | TypeScript automático |
-| Sintaxis verbosa | API minimalista |
+- **Vuex 4**
+  - Mutations + Actions
+  - `this.$store.dispatch()`
+  - Módulos complejos
+  - TypeScript complejo
+  - Sintaxis verbosa
+
+- **Pinia**
+  - Solo Actions
+  - `store.action()`
+  - Stores simples
+  - TypeScript automático
+  - API minimalista
 
 ## Instalación y configuración
 
@@ -134,7 +140,7 @@ export const useCounterStore = defineStore('counter', () => {
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useCounterStore } from '@/stores/counter'
 
 // Usar el store
