@@ -1,4 +1,4 @@
-import Vue2Vue3Comparison from "./Vue2Vue3Comparison.vue";
+import Vue2Vue3Comparison from './Vue2Vue3Comparison.vue'
 
 Vue 3 representa un salto evolutivo significativo desde Vue 2, introduciendo mejoras fundamentales en arquitectura, rendimiento y experiencia de desarrollo. En esta sección exploraremos los cambios más importantes que debes conocer para migrar exitosamente tus proyectos.
 
@@ -96,13 +96,16 @@ Nuevos selectores CSS para mayor control:
 
 ```css
 /* Afecta elementos hijo profundos */
-:deep(.child-component) { }
+:deep(.child-component) {
+}
 
 /* Afecta slots */
-:slotted(.slot-content) { }
+:slotted(.slot-content) {
+}
 
 /* Afecta elementos globales desde componente */
-:global(.global-class) { }
+:global(.global-class) {
+}
 ```
 
 ### Suspense
@@ -124,7 +127,7 @@ Manejo declarativo de componentes asíncronos:
 
 Veamos cómo estos cambios se reflejan en código real:
 
-<Vue2Vue3Comparison/>
+<Vue2Vue3Comparison />
 
 ## 🔄 Estrategias de migración
 
@@ -143,4 +146,3 @@ Vue 3 ha renovado todo el ecosistema:
 - **Pinia**: Remplazo oficial de Vuex, más simple y TypeScript-friendly
 - **Vue Router 4**: Completamente reescrito para Vue 3
 - **Nuxt 3**: Framework full-stack basado en Vue 3
-

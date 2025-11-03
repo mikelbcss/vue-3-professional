@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { RouterView } from 'vue-router';
-import AppSidebar from '../components/AppSidebar.vue';
-import { SidebarProvider, SidebarInset } from '../components/ui/sidebar';
+import { RouterView } from 'vue-router'
+import AppSidebar from '../components/AppSidebar.vue'
+import { SidebarProvider, SidebarInset } from '../components/ui/sidebar'
 </script>
 
 <template>

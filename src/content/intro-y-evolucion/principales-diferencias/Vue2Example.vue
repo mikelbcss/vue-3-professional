@@ -14,20 +14,20 @@ export default {
     return {
       title: 'Mi Contador',
       count: 0,
-    };
+    }
   },
   computed: {
     isEven() {
-      return this.count % 2 === 0;
+      return this.count % 2 === 0
     },
   },
   methods: {
     increment() {
-      this.count++;
+      this.count++
     },
     decrement() {
-      this.count--;
+      this.count--
     },
   },
-};
+}
 </script>

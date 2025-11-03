@@ -27,7 +27,7 @@ const router = new VueRouter({
 
 new Vue({
   router,
-  render: (h) => h(App),
+  render: h => h(App),
 }).$mount('#app')
 ```
 
@@ -39,7 +39,7 @@ Componente con Options API:
   <div>
     <h1>Home</h1>
     <button @click="$router.push({ name: 'about' })">Ir a About</button>
-    <p>Ruta actual: {{$route.name}}</p>
+    <p>Ruta actual: {{ $route.name }}</p>
   </div>
 </template>
 

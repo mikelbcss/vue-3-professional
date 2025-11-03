@@ -6,13 +6,7 @@
     <!-- Input with template ref -->
     <div class="input-section">
       <label>Escribe tu mensaje:</label>
-      <input
-        ref="messageInput"
-        v-model="message"
-        type="text"
-        placeholder="Escribe algo..."
-        class="input-field"
-      />
+      <input ref="messageInput" v-model="message" type="text" placeholder="Escribe algo..." class="input-field" />
       <button @click="focusInput">Enfocar Input</button>
     </div>
 
@@ -22,18 +16,13 @@
       <p class="formatted-message" :class="messageClass">
         {{ formattedMessage }}
       </p>
-      <p class="char-count">
-        Caracteres: {{ message.length }}
-      </p>
+      <p class="char-count">Caracteres: {{ message.length }}</p>
     </div>
 
     <!-- Theme controls -->
     <div class="controls">
       <label>
-        <input
-          type="checkbox"
-          v-model="isDarkMode"
-        />
+        <input type="checkbox" v-model="isDarkMode" />
         Modo oscuro
       </label>
 
@@ -49,18 +38,14 @@
 
     <!-- Action button -->
     <div class="actions">
-      <button
-        @click="sendMessage"
-        :disabled="!message.trim()"
-        class="send-button"
-      >
-        Enviar Mensaje
-      </button>
+      <button @click="sendMessage" :disabled="!message.trim()" class="send-button">Enviar Mensaje</button>
     </div>
 
     <!-- Status display -->
     <div class="status" v-if="lastSentMessage">
-      <p>Último mensaje enviado: <strong>{{ lastSentMessage }}</strong></p>
+      <p>
+        Último mensaje enviado: <strong>{{ lastSentMessage }}</strong>
+      </p>
     </div>
   </div>
 </template>
@@ -85,7 +70,7 @@ const fontSize = ref<'small' | 'medium' | 'large'>('medium')
 const lastSentMessage = ref('')
 const charCountColor = ref('#333')
 
-// Template ref for DOM access
+// Template ref for DOM access - templateRef
 const messageInput = ref<HTMLInputElement>()
 
 // Helper functions (replacing filters)
@@ -102,19 +87,19 @@ const addPrefix = (value: string): string => {
 // Computed properties
 const containerClass = computed(() => ({
   'dark-mode': isDarkMode.value,
-  'light-mode': !isDarkMode.value
+  'light-mode': !isDarkMode.value,
 }))
 
 const messageClass = computed(() => ({
   'has-content': message.value.length > 0,
-  'long-message': message.value.length > 20
+  'long-message': message.value.length > 20,
 }))
 
 const fontSizeValue = computed(() => {
   const sizes = {
     small: '14px',
     medium: '16px',
-    large: '18px'
+    large: '18px',
   }
   return sizes[fontSize.value]
 })
@@ -128,8 +113,8 @@ const formattedMessage = computed(() => {
   return addPrefix(capitalize(message.value))
 })
 
-// Watchers
-watch(message, (newMessage) => {
+// Watchers - Aunque mejor computed
+watch(message, newMessage => {
   console.log('💬 Message changed:', newMessage)
 
   // Update character count color based on length
@@ -142,11 +127,11 @@ watch(message, (newMessage) => {
   }
 })
 
-watch(isDarkMode, (newValue) => {
+watch(isDarkMode, newValue => {
   console.log('🌓 Theme changed to:', newValue ? 'dark' : 'light')
 })
 
-watch(fontSize, (newSize) => {
+watch(fontSize, newSize => {
   console.log('📝 Font size changed to:', newSize)
 })
 
@@ -167,7 +152,7 @@ const sendMessage = () => {
     emit('message-sent', {
       original: message.value,
       formatted,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     })
 
     console.log('📤 Message sent:', formatted)
@@ -306,11 +291,13 @@ const sendMessage = () => {
 ### Cambios principales de Vue 2 a Vue 3
 
 #### 1. **Script Setup con TypeScript**
+
 - Cambió de Options API a Composition API
 - Uso de `<script setup lang="ts">` para mejor DX y tipos
 - TypeScript completo para mayor seguridad de tipos
 
 #### 2. **Props y Emits tipados**
+
 ```typescript
 // Vue 2: props: { title: String }
 const props = defineProps<{ title?: string }>()
@@ -320,6 +307,7 @@ const emit = defineEmits<{ 'message-sent': [payload] }>()
 ```
 
 #### 3. **Reactividad**
+
 ```typescript
 // Vue 2: data() { return { message: '' } }
 const message = ref('')
@@ -329,7 +317,9 @@ message.value // en JavaScript, message en template
 ```
 
 #### 4. **Migración de Filters**
+
 **Vue 2:**
+
 ```javascript
 {{ message | capitalize | addPrefix }}
 filters: {
@@ -339,6 +329,7 @@ filters: {
 ```
 
 **Vue 3:**
+
 ```typescript
 // Opción 1: Computed property (recomendado)
 const formattedMessage = computed(() => {
@@ -350,6 +341,7 @@ const capitalize = (value: string): string => { ... }
 ```
 
 #### 5. **Template Refs**
+
 ```typescript
 // Vue 2: this.$refs.messageInput
 const messageInput = ref<HTMLInputElement>()
@@ -357,14 +349,16 @@ messageInput.value?.focus()
 ```
 
 #### 6. **Watchers**
+
 ```typescript
 // Vue 2: watch: { message(newVal) { ... } }
-watch(message, (newMessage) => {
+watch(message, newMessage => {
   console.log('Changed:', newMessage)
 })
 ```
 
 #### 7. **v-bind en CSS**
+
 ```css
 /* Nueva funcionalidad de Vue 3 */
 .message-formatter {

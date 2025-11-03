@@ -46,21 +46,25 @@ const isAdult = computed(() => age.value >= 18)
 ## Explicación de la solución
 
 ### Conversión de `data()` a `ref()`
+
 - Cada propiedad reactiva se convierte en un `ref()`
 - `ref()` crea una referencia reactiva que mantiene la reactividad
 - Los valores primitivos (string, number, boolean) deben usar `ref()`
 
 ### Manejo de `.value`
+
 - En JavaScript, necesitas `.value` para acceder y modificar refs
 - En el template, Vue maneja automáticamente `.value`
 - Ejemplo: `name.value = 'María'` en JS, pero `{{ name }}` en template
 
 ### Funciones vs Methods
+
 - Los métodos se convierten en funciones constantes
 - No necesitas `this` porque las variables están en el scope
 - Sintaxis: `const functionName = () => { ... }`
 
 ### Computed Properties
+
 - `computed()` funciona igual que antes
 - Debe importarse explícitamente desde 'vue'
 - Automáticamente rastrea dependencias reactivas

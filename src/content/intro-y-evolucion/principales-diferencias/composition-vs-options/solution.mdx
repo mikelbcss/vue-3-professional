@@ -28,15 +28,16 @@ const isEven = computed(() => counter.value % 2 === 0)
 ```
 
 ## Explicación de la solución
-* ref() para datos reactivos: reemplaza data() del Options API
-* computed() para propiedades calculadas: misma función con nueva sintaxis
-* Funciones directas: los métodos ahora son funciones constantes
-* .value para refs: necesario para leer y escribir
-* Imports explícitos: importa desde vue lo que uses
+
+- ref() para datos reactivos: reemplaza data() del Options API
+- computed() para propiedades calculadas: misma función con nueva sintaxis
+- Funciones directas: los métodos ahora son funciones constantes
+- .value para refs: necesario para leer y escribir
+- Imports explícitos: importa desde vue lo que uses
 
 ## Beneficios de esta migración
-* Mejor tree-shaking
-* Código más conciso con `<script setup>`
-* Mejor soporte TypeScript
-* Lógica más organizada y reutilizable
 
+- Mejor tree-shaking
+- Código más conciso con `<script setup>`
+- Mejor soporte TypeScript
+- Lógica más organizada y reutilizable

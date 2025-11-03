@@ -5,21 +5,12 @@ Convierte este simple componente contador de Vue 2 a Vue 3 usando los hooks de c
 ```vue
 <template>
   <div>
-    <h2>{{ title }}</h2>
-    <p>Contador: {{ counter }}</p>
-    <button @click="increment">Incrementar</button>
     <p>Abre la consola para ver los mensajes del ciclo de vida</p>
   </div>
 </template>
 
 <script>
 export default {
-  data() {
-    return {
-      title: 'Ciclo de Vida - Vue 2',
-      counter: 0
-    }
-  },
   mounted() {
     console.log('✅ mounted: Componente montado')
   },
@@ -29,11 +20,6 @@ export default {
   beforeUnmount() {
     console.log('🧹 beforeUnmount: Limpiando antes de desmontar')
   },
-  methods: {
-    increment() {
-      this.counter++
-    }
-  }
 }
 </script>
 ```
@@ -41,11 +27,9 @@ export default {
 ## Tareas
 
 1. **Convierte a `<script setup>`** y usa TypeScript
-2. **Convierte `data()` a `ref()`** para las variables reactivas
-3. **Convierte `mounted` a `onMounted()`**
-4. **Convierte `updated` a `onUpdated()`**
-5. **Convierte `beforeUnmount` a `onUnmounted()`**
-6. **Convierte `methods` a funciones**
+2. **Convierte `mounted` a `onMounted()`**
+3. **Convierte `updated` a `onUpdated()`**
+4. **Convierte `beforeUnmount` a `onUnmounted()`**
 
 ## Hooks de Ciclo de Vida
 
@@ -55,6 +39,5 @@ export default {
 
 ## Pistas
 
-- Importa `ref`, `onMounted`, `onUpdated`, `onUnmounted` desde 'vue'
+- Importa `onMounted`, `onUpdated`, `onUnmounted` desde 'vue'
 - Los hooks son funciones que reciben un callback
-- Usa `.value` para modificar refs en JavaScript

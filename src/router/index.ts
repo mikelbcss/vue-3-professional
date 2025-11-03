@@ -1,6 +1,6 @@
-import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router';
-import Home from '../views/Home.vue';
-import ModuleLayout from '../layouts/ModuleLayout.vue';
+import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
+import Home from '../views/Home.vue'
+import ModuleLayout from '../layouts/ModuleLayout.vue'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -32,9 +32,9 @@ const routes: RouteRecordRaw[] = [
       },
     ],
   },
-];
+]
 
 export const router = createRouter({
   history: createWebHistory(),
   routes,
-});
+})

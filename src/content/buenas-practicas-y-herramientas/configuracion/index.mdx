@@ -11,31 +11,23 @@ En este módulo exploraremos patrones, herramientas y flujos de trabajo que te a
 
 ---
 
-## 🧹 Biome (formatter + linter)
+## 🧹 ESLint + Prettier (lint y formateo)
 
-Biome unifica formateo y lint en una sola herramienta, rápida y con reglas sensatas. Este proyecto ya la tiene configurada.
+Usamos ESLint para reglas de calidad de código y Prettier para formateo consistente. Esta combinación es estándar en el ecosistema Vue/TypeScript y se integra con Vite sin fricción.
 
-- Configuración en `biome.json` (extracto):
+- Configuración relevante:
+  - `eslint.config.ts` (flat config) con `eslint-plugin-vue`, `typescript-eslint` y `eslint-config-prettier` para desactivar reglas de estilo en conflicto.
+  - `.prettierrc.json` con las reglas de formato del proyecto.
 
-```json
-{
-  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
-  "formatter": { "enabled": true, "indentWidth": 2, "lineWidth": 100 },
-  "linter": { "enabled": true, "rules": { "recommended": true } },
-  "javascript": {
-    "formatter": { "quoteStyle": "single", "trailingCommas": "es5" }
-  }
-}
-```
-
-- Scripts en `package.json` ya disponibles:
+- Scripts en `package.json`:
 
 ```json
 {
   "scripts": {
-    "lint": "biome lint .",
-    "lint:fix": "biome lint --write .",
-    "format": "biome format --write ."
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write --ignore-path .gitignore .",
+    "format:check": "prettier --check --ignore-path .gitignore ."
   }
 }
 ```
@@ -46,9 +38,10 @@ Biome unifica formateo y lint en una sola herramienta, rápida y con reglas sens
 npm run lint
 npm run lint:fix
 npm run format
+npm run format:check
 ```
 
-Consejo: ejecuta Biome en los hooks de Git para asegurar consistencia en cada commit (ver sección Lefthook).
+Consejo: ejecuta ESLint y Prettier en los hooks de Git para asegurar consistencia en cada commit (ver sección Lefthook).
 
 ---
 
@@ -81,9 +74,9 @@ Para Vue 3, usa `vue-tsc` para validar tipos sin depender del bundler.
     "types": ["node", "vite/client"],
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
-    }
-  }
+      "@/*": ["src/*"],
+    },
+  },
 }
 ```
 
@@ -147,9 +140,13 @@ npx lefthook install
 ```yaml
 pre-commit:
   commands:
-    check:
-      glob: "*.{js,ts,cjs,mjs,d.cts,d.mts,vue,jsx,tsx,json,jsonc}"
-      run: npx @biomejs/biome check --write --no-errors-on-unmatched --files-ignore-unknown=true --colors=off {staged_files}
+    format:
+      glob: '*.{js,ts,cjs,mjs,d.cts,d.mts,vue,jsx,tsx,json,jsonc,md,mdx}'
+      run: npx prettier --write --ignore-path .gitignore {staged_files}
+      stage_fixed: true
+    lint:
+      glob: '*.{js,ts,cjs,mjs,d.cts,d.mts,vue,jsx,tsx}'
+      run: npx eslint --fix {staged_files}
       stage_fixed: true
 ```
 
@@ -180,8 +177,8 @@ Ejemplo:
   "engines": { "node": ">=20 <21" },
   "packageManager": "npm@10",
   "overrides": {
-    "minimatch": "9.0.5"
-  }
+    "minimatch": "9.0.5",
+  },
 }
 ```
 
@@ -212,9 +209,9 @@ name: CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -257,7 +254,7 @@ Extensiones útiles:
 
 ## ✅ Checklist rápida
 
-- Biome funcionando y ejecutándose en hooks.
+- ESLint y Prettier funcionando y ejecutándose en hooks.
 - TypeScript estricto y `vue-tsc` en CI.
 - Vite con alias y variables de entorno.
 - Lefthook instalado en local (`npx lefthook install`).

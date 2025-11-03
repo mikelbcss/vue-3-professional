@@ -5,6 +5,7 @@ Pinia es la librería de gestión de estado oficial para Vue 3, diseñada desde 
 ## ¿Qué es Pinia?
 
 Pinia es el sucesor de Vuex que ofrece:
+
 - ✅ **API intuitiva**: Sintaxis simple y natural
 - ✅ **TypeScript nativo**: Soporte completo sin configuración extra
 - ✅ **Composition API**: Integración perfecta con Vue 3
@@ -59,17 +60,17 @@ export const useCounterStore = defineStore('counter', {
   // Estado
   state: () => ({
     count: 0,
-    name: 'Contador'
+    name: 'Contador',
   }),
 
   // Getters (computed)
   getters: {
-    doubleCount: (state) => state.count * 2,
+    doubleCount: state => state.count * 2,
 
     // Getter con parámetros
-    getCountPlusValue: (state) => {
-      return (value) => state.count + value
-    }
+    getCountPlusValue: state => {
+      return value => state.count + value
+    },
   },
 
   // Actions (methods)
@@ -86,8 +87,8 @@ export const useCounterStore = defineStore('counter', {
     // Acción con parámetros
     incrementBy(value) {
       this.count += value
-    }
-  }
+    },
+  },
 })
 ```
 
@@ -111,7 +112,7 @@ export const useCounterStore = defineStore('counter', () => {
     count.value++
   }
 
-  const incrementBy = (value) => {
+  const incrementBy = value => {
     count.value += value
   }
 
@@ -121,7 +122,7 @@ export const useCounterStore = defineStore('counter', () => {
     name,
     doubleCount,
     increment,
-    incrementBy
+    incrementBy,
   }
 })
 ```
@@ -170,7 +171,7 @@ export default {
   setup() {
     const counterStore = useCounterStore()
     return { counterStore }
-  }
+  },
 }
 </script>
 ```
@@ -194,7 +195,7 @@ export const useAuthStore = defineStore('auth', () => {
   const userName = computed(() => user.value?.name || 'Invitado')
 
   // Actions
-  const login = async (credentials) => {
+  const login = async credentials => {
     isLoading.value = true
     try {
       const response = await authAPI.login(credentials)
@@ -239,7 +240,7 @@ export const useAuthStore = defineStore('auth', () => {
     // Actions
     login,
     logout,
-    fetchProfile
+    fetchProfile,
   }
 })
 ```
@@ -256,11 +257,11 @@ export const useSettingsStore = defineStore('settings', () => {
   const language = ref(localStorage.getItem('language') || 'es')
 
   // Persistir cambios automáticamente
-  watch(theme, (newTheme) => {
+  watch(theme, newTheme => {
     localStorage.setItem('theme', newTheme)
   })
 
-  watch(language, (newLanguage) => {
+  watch(language, newLanguage => {
     localStorage.setItem('language', newLanguage)
   })
 
@@ -271,7 +272,7 @@ export const useSettingsStore = defineStore('settings', () => {
   return {
     theme,
     language,
-    toggleTheme
+    toggleTheme,
   }
 })
 ```
@@ -287,7 +288,7 @@ export const useCartStore = defineStore('cart', () => {
   const authStore = useAuthStore()
   const items = ref([])
 
-  const addItem = (product) => {
+  const addItem = product => {
     if (!authStore.isAuthenticated) {
       throw new Error('Debes estar autenticado')
     }
@@ -296,7 +297,7 @@ export const useCartStore = defineStore('cart', () => {
 
   return {
     items,
-    addItem
+    addItem,
   }
 })
 ```
@@ -332,6 +333,7 @@ describe('Counter Store', () => {
 ## DevTools Integration
 
 Pinia incluye soporte completo para Vue DevTools:
+
 - 🔍 **Inspección de estado**: Ve el estado actual de todos los stores
 - 🕰️ **Time travel**: Navega entre diferentes estados
 - 🎯 **Actions tracking**: Observa qué acciones se ejecutan
@@ -340,6 +342,7 @@ Pinia incluye soporte completo para Vue DevTools:
 ## Próximos pasos
 
 En los ejercicios de esta sección aprenderás:
+
 - Configurar Pinia en una aplicación Vue
 - Crear stores con diferentes patrones
 - Implementar autenticación con Pinia

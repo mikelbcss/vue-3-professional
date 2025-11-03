@@ -22,7 +22,7 @@ export const useTodosStore = defineStore('todos', () => {
     const newTodo: Todo = {
       id: Date.now(),
       text: text.trim(),
-      completed: false
+      completed: false,
     }
     if (newTodo.text) {
       todos.value.push(newTodo)
@@ -32,7 +32,7 @@ export const useTodosStore = defineStore('todos', () => {
   // Retornar lo que queremos exponer
   return {
     todos,
-    addTodo
+    addTodo,
   }
 })
 ```
@@ -51,13 +51,8 @@ export const useTodosStore = defineStore('todos', () => {
           v-model="newTodoText"
           placeholder="¿Qué necesitas hacer?"
           class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-        <button
-          type="submit"
-          class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-        >
-          Añadir
-        </button>
+        />
+        <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Añadir</button>
       </div>
     </form>
 
@@ -121,6 +116,7 @@ const handleAddTodo = () => {
 ### Base para futuros ejercicios
 
 Este store básico será la fundación para añadir progresivamente:
+
 - Marcar todos como completados
 - Eliminar todos
 - Filtrar todos por estado

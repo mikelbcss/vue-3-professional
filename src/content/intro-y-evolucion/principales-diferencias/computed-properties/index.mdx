@@ -66,7 +66,7 @@ Convierte todas las estadísticas del carrito de **refs manuales** a **computed 
 - **Automático**: Se actualiza solo cuando cambian las dependencias
 - **Eficiente**: Solo recalcula cuando es necesario (cache inteligente)
 - **Sin errores**: No puedes olvidar actualizar el estado
-- **Declarativo**: El código expresa *qué* quieres, no *cómo* actualizarlo
+- **Declarativo**: El código expresa _qué_ quieres, no _cómo_ actualizarlo
 - **Limpio**: Eliminas código repetitivo de sincronización
 
 ## 🔍 Conceptos Clave
@@ -110,6 +110,7 @@ const cartStatus = computed(() => {
 ## 🚀 Resultado Esperado
 
 Después de la refactorización:
+
 - ✅ Sin función `updateCartStatistics()`
 - ✅ Sin llamadas manuales de actualización
 - ✅ Todas las estadísticas como `computed()`

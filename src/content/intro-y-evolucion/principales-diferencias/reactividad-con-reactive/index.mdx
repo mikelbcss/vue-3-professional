@@ -32,9 +32,9 @@ export default {
         email: 'juan@example.com',
         address: {
           city: 'Madrid',
-          country: 'España'
-        }
-      }
+          country: 'España',
+        },
+      },
     }
   },
   methods: {
@@ -57,7 +57,7 @@ export default {
       this.user.email = 'juan@example.com'
       this.user.address.city = 'Madrid'
       this.user.address.country = 'España'
-    }
+    },
   },
   computed: {
     isAdult() {
@@ -65,8 +65,8 @@ export default {
     },
     totalFields() {
       return Object.keys(this.user).length + Object.keys(this.user.address).length
-    }
-  }
+    },
+  },
 }
 </script>
 ```

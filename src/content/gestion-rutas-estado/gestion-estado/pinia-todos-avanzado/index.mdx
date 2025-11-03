@@ -1,0 +1,54 @@
+## Objetivo
+
+Refactoriza la lista de tareas para usar Pinia con:
+
+- `storeToRefs()` para extraer refs reactivas del store
+- Una acción `reset()` que restaure el estado inicial
+- Un filtro por nombre (getter con parámetro) `getTodosByName(name)` que devuelva una lista
+
+Usa como base el ejercicio de todos existente.
+
+## Tareas
+
+1. Crea un store de Pinia llamado `useTodosStore` (por ejemplo, en `./todos.store.ts`).
+   - Estado inicial sugerido:
+     ```ts
+     interface Todo {
+       id: number
+       text: string
+       completed: boolean
+     }
+     interface State {
+       todos: Todo[]
+     }
+     ```
+   - Acciones mínimas: `addTodo(text: string)`, `toggleTodo(id: number)`, `reset()`.
+   - Getters:
+     - `completedCount`: número de tareas completadas.
+     - `getTodosByName: (name: string) => Todo[]` (getter con parámetro que devuelve coincidencias).
+2. En `Exercise.vue`, usa el store:
+   - Importa el store y llama a `useTodosStore()`.
+   - Usa `storeToRefs(store)` para extraer `todos` como ref.
+   - Conecta el formulario a `addTodo`.
+   - Añade un botón "Reset" que llame a `store.reset()`.
+   - Añade un pequeño buscador por nombre y filtra la lista usando `store.getTodosByName(name)` para mostrar solo las coincidencias.
+3. Asegura el tipado con TypeScript y evita `any`.
+
+## Requisitos
+
+- No cambies el UI principal; enfócate en migrar la lógica al store.
+- Usa `storeToRefs` para extraer refs; no hagas destructuring directo del store.
+- Implementa `reset()` sin mutar campo a campo; restaura el estado inicial.
+- Implementa el getter con parámetro como función pura basada en el estado.
+
+## Pistas
+
+- Recuerda registrar Pinia en la app (ya está configurado en este proyecto).
+- `storeToRefs` solo convierte state y getters en refs; las acciones se siguen llamando desde el objeto store.
+- Un patrón común para `reset()` es mantener una función `getDefaultState()` y reasignar.
+
+## Qué se espera ver
+
+- Al añadir tareas, la lista se actualiza.
+- El botón reset limpia todas las tareas.
+- El buscador por nombre filtra la lista en tiempo real mostrando solo las tareas que coinciden (búsqueda case-insensitive por substring).

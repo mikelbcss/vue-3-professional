@@ -3,8 +3,10 @@
     <h3 class="text-base font-semibold">Contador B</h3>
 
     <div class="flex items-center justify-between">
-      <p>Valor: <strong>{{ count }}</strong></p>
-      <span class="text-xs text-muted-foreground" v-if="isEven">Es par</span>
+      <p>
+        Valor: <strong>{{ count }}</strong>
+      </p>
+      <span v-if="isEven" class="text-xs text-muted-foreground">Es par</span>
     </div>
 
     <div class="flex gap-2">

@@ -44,8 +44,8 @@ function getDefaultUser(): User {
     address: {
       city: 'Madrid',
       country: 'España',
-    }
-  };
+    },
+  }
   return user
 }
 
@@ -67,7 +67,12 @@ const updateAddress = () => {
 }
 
 const reset = () => {
-  const { name, age, email, address: { country, city }} = getDefaultUser();
+  const {
+    name,
+    age,
+    email,
+    address: { country, city },
+  } = getDefaultUser()
   user.name = name
   user.age = age
   user.email = email
@@ -77,30 +82,32 @@ const reset = () => {
 
 const isAdult = computed(() => user.age >= 18)
 
-const totalFields = computed(() =>
-  Object.keys(user).length + Object.keys(user.address).length
-)
+const totalFields = computed(() => Object.keys(user).length + Object.keys(user.address).length)
 </script>
 ```
 
 ## Explicación de la solución
 
 ### Conversión de `data()` a `reactive()`
+
 - `reactive()` convierte un objeto JavaScript en un proxy reactivo
 - Todas las propiedades, incluyendo las anidadas, se vuelven reactivas automáticamente
 - No necesitas `.value` para acceder a las propiedades como con `ref()`
 
 ### Reactividad Profunda (Deep Reactivity)
+
 - `user.address.city` es automáticamente reactiva
 - Los cambios en propiedades anidadas disparan actualizaciones de la UI
 - Vue rastrea todos los niveles de anidación del objeto
 
 ### Sintaxis Simplificada
+
 - Acceso directo: `user.name` en lugar de `this.user.name`
 - Sin `this` keyword necesario
 - Código más limpio y legible
 
 ### TypeScript Integration
+
 - Interfaces definen la estructura de los objetos
 - Mejor autocompletado y detección de errores
 - Tipado estricto para propiedades anidadas

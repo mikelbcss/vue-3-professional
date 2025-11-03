@@ -2,9 +2,9 @@
   <section class="space-y-3">
     <h2 class="text-base font-medium">Zona de práctica: Router embebido (sandbox)</h2>
     <p class="text-sm text-muted-foreground">
-      Edita el código comentado en el <code>&lt;script setup&gt;</code> para migrar de Vue Router v3 a v4.
-      Esta sección monta una mini‑app con su propio router usando <em>memory history</em>,
-      sin tocar el router global de la aplicación.
+      Edita el código comentado en el <code>&lt;script setup&gt;</code> para migrar de Vue Router v3 a v4. Esta sección
+      monta una mini‑app con su propio router usando <em>memory history</em>, sin tocar el router global de la
+      aplicación.
     </p>
     <div ref="mountEl" class="rounded-md border p-3">
       <p class="text-xs text-muted-foreground">Cargando sandbox…</p>
@@ -42,7 +42,6 @@
 // import {About, Home, NotFound, useSandBoxRouter} from './components.ts'
 // import {ref} from "vue";
 
-
 // 2) Define las Rutas
 // const routes = []
 
@@ -55,4 +54,3 @@
 // const mountEl = ref<HTMLElement | null>(null)
 // useSandBoxRouter(router, mountEl)
 </script>
-

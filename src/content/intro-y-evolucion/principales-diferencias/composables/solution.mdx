@@ -39,7 +39,9 @@ export function useStepCounter(options: UseStepCounterOptions) {
   <div class="space-y-3 p-4 rounded border">
     <h3 class="text-base font-semibold">Contador A</h3>
     <div class="flex items-center justify-between">
-      <p>Valor: <strong>{{ count }}</strong></p>
+      <p>
+        Valor: <strong>{{ count }}</strong>
+      </p>
       <span class="text-xs text-muted-foreground" v-if="isEven">Es par</span>
     </div>
     <div class="flex gap-2">
@@ -67,7 +69,9 @@ const { count, increment, decrement, reset, isEven } = useStepCounter({
   <div class="space-y-3 p-4 rounded border">
     <h3 class="text-base font-semibold">Contador B</h3>
     <div class="flex items-center justify-between">
-      <p>Valor: <strong>{{ count }}</strong></p>
+      <p>
+        Valor: <strong>{{ count }}</strong>
+      </p>
       <span class="text-xs text-muted-foreground" v-if="isEven">Es par</span>
     </div>
     <div class="flex gap-2">

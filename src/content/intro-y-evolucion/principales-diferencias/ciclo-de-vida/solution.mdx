@@ -1,22 +1,12 @@
 ```vue
 <template>
   <div>
-    <h2>{{ title }}</h2>
-    <p>Contador: {{ counter }}</p>
-    <button @click="increment">Incrementar</button>
     <p>Abre la consola para ver los mensajes del ciclo de vida</p>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUpdated, onUnmounted } from 'vue'
-
-const title = ref('Ciclo de Vida - Vue 3')
-const counter = ref(0)
-
-const increment = () => {
-  counter.value++
-}
+import { onMounted, onUpdated, onUnmounted } from 'vue'
 
 onMounted(() => {
   console.log('✅ onMounted: Componente montado')

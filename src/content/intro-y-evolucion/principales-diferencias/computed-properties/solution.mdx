@@ -14,8 +14,12 @@
         <div class="flex items-center space-x-2">
           <button @click="decrementQuantity(item.id)" class="px-2 py-1 bg-red-500 text-white rounded text-sm">-</button>
           <span class="mx-2">{{ item.quantity }}</span>
-          <button @click="incrementQuantity(item.id)" class="px-2 py-1 bg-green-500 text-white rounded text-sm">+</button>
-          <button @click="removeItem(item.id)" class="px-2 py-1 bg-gray-500 text-white rounded text-sm ml-2">Eliminar</button>
+          <button @click="incrementQuantity(item.id)" class="px-2 py-1 bg-green-500 text-white rounded text-sm">
+            +
+          </button>
+          <button @click="removeItem(item.id)" class="px-2 py-1 bg-gray-500 text-white rounded text-sm ml-2">
+            Eliminar
+          </button>
         </div>
       </div>
     </div>
@@ -24,17 +28,8 @@
     <div class="mb-6 p-4 bg-blue-50 rounded">
       <h3 class="font-semibold mb-2">Agregar producto:</h3>
       <div class="flex space-x-2">
-        <input
-          v-model="newItemName"
-          placeholder="Nombre"
-          class="flex-1 px-2 py-1 border rounded"
-        />
-        <input
-          v-model="newItemPrice"
-          type="number"
-          placeholder="Precio"
-          class="w-20 px-2 py-1 border rounded"
-        />
+        <input v-model="newItemName" placeholder="Nombre" class="flex-1 px-2 py-1 border rounded" />
+        <input v-model="newItemPrice" type="number" placeholder="Precio" class="w-20 px-2 py-1 border rounded" />
         <button @click="addItem" class="px-3 py-1 bg-blue-500 text-white rounded">+</button>
       </div>
     </div>
@@ -60,7 +55,7 @@ const title = ref('Carrito de Compras - Con Computed Properties')
 const items = ref([
   { id: 1, name: 'Laptop', price: 999, quantity: 1 },
   { id: 2, name: 'Mouse', price: 25, quantity: 2 },
-  { id: 3, name: 'Teclado', price: 75, quantity: 1 }
+  { id: 3, name: 'Teclado', price: 75, quantity: 1 },
 ])
 
 const newItemName = ref('')
@@ -76,7 +71,7 @@ const uniqueItemsCount = computed(() => {
 })
 
 const totalPrice = computed(() => {
-  return items.value.reduce((sum, item) => sum + (item.price * item.quantity), 0)
+  return items.value.reduce((sum, item) => sum + item.price * item.quantity, 0)
 })
 
 const averagePrice = computed(() => {
@@ -126,7 +121,7 @@ const addItem = () => {
       id: newId,
       name: newItemName.value,
       price: newItemPrice.value,
-      quantity: 1
+      quantity: 1,
     })
     newItemName.value = ''
     newItemPrice.value = 0
@@ -141,6 +136,7 @@ const addItem = () => {
 ### Cambios Principales
 
 #### 1. **Import de `computed`**
+
 ```js
 import { ref, computed } from 'vue'
 ```
@@ -148,6 +144,7 @@ import { ref, computed } from 'vue'
 #### 2. **Conversión de refs manuales a computed properties**
 
 **Antes (problemático):**
+
 ```js
 const totalItems = ref(4) // Valor hardcodeado
 const updateCartStatistics = () => {
@@ -156,6 +153,7 @@ const updateCartStatistics = () => {
 ```
 
 **Después (automático):**
+
 ```js
 const totalItems = computed(() => {
   return items.value.reduce((sum, item) => sum + item.quantity, 0)
@@ -163,6 +161,7 @@ const totalItems = computed(() => {
 ```
 
 #### 3. **Eliminación completa de sincronización manual**
+
 - ❌ Eliminada función `updateCartStatistics()`
 - ❌ Eliminadas todas las llamadas manuales de actualización
 - ✅ Todo se actualiza automáticamente cuando `items` cambia
@@ -170,6 +169,7 @@ const totalItems = computed(() => {
 ### Computed Properties Implementados
 
 #### **`totalItems`** - Total de productos
+
 ```js
 const totalItems = computed(() => {
   return items.value.reduce((sum, item) => sum + item.quantity, 0)
@@ -177,6 +177,7 @@ const totalItems = computed(() => {
 ```
 
 #### **`uniqueItemsCount`** - Artículos únicos
+
 ```js
 const uniqueItemsCount = computed(() => {
   return items.value.length
@@ -184,21 +185,25 @@ const uniqueItemsCount = computed(() => {
 ```
 
 #### **`totalPrice`** - Precio total
+
 ```js
 const totalPrice = computed(() => {
-  return items.value.reduce((sum, item) => sum + (item.price * item.quantity), 0)
+  return items.value.reduce((sum, item) => sum + item.price * item.quantity, 0)
 })
 ```
 
 #### **`averagePrice`** - Precio promedio
+
 ```js
 const averagePrice = computed(() => {
   return uniqueItemsCount.value > 0 ? totalPrice.value / uniqueItemsCount.value : 0
 })
 ```
-*Nota: Usa otros computed properties y previene división por cero*
+
+_Nota: Usa otros computed properties y previene división por cero_
 
 #### **`hasExpensiveItems`** - Productos caros
+
 ```js
 const hasExpensiveItems = computed(() => {
   return items.value.some(item => item.price > 50)
@@ -206,6 +211,7 @@ const hasExpensiveItems = computed(() => {
 ```
 
 #### **`cartStatus`** - Estado del carrito
+
 ```js
 const cartStatus = computed(() => {
   if (items.value.length === 0) {
@@ -217,26 +223,31 @@ const cartStatus = computed(() => {
   }
 })
 ```
-*Nota: Depende de múltiples computed properties*
+
+_Nota: Depende de múltiples computed properties_
 
 ## ✨ Beneficios Obtenidos
 
 ### **Automático y Reactivo**
+
 - Las estadísticas se actualizan instantáneamente al cambiar items
 - No hay posibilidad de olvidar actualizar el estado
 - Eliminado código repetitivo de sincronización
 
 ### **Performance Optimizada**
+
 - Vue cachea los resultados de computed properties
 - Solo recalcula cuando cambian las dependencias
 - Evita cálculos innecesarios
 
 ### **Código Más Limpio**
+
 - **-30 líneas** de código eliminadas (función updateCartStatistics + llamadas)
 - Funciones más simples y enfocadas
 - Lógica declarativa en lugar de imperativa
 
 ### **Mantenible y Confiable**
+
 - Un solo lugar donde se define cada cálculo
 - Imposible que el estado quede desincronizado
 - Fácil agregar nuevas estadísticas computadas
@@ -244,6 +255,7 @@ const cartStatus = computed(() => {
 ## 🔍 Conceptos Avanzados
 
 ### **Computed Dependencies Chain**
+
 ```js
 // uniqueItemsCount depende de items
 const uniqueItemsCount = computed(() => items.value.length)
@@ -260,12 +272,16 @@ const averagePrice = computed(() =>
 Vue rastrea automáticamente toda la cadena de dependencias.
 
 ### **Lazy Evaluation**
+
 Los computed properties solo se ejecutan cuando:
+
 1. Se accede a su valor
 2. Sus dependencias han cambiado
 
 ### **Template Usage**
+
 En el template, los computed se usan exactamente igual que refs:
+
 ```vue
 <p>Total: {{ totalItems }}</p>
 <p>Precio: €{{ totalPrice.toFixed(2) }}</p>
@@ -274,6 +290,7 @@ En el template, los computed se usan exactamente igual que refs:
 ## 🚀 Resultado Final
 
 El carrito ahora:
+
 - ✅ Se actualiza automáticamente
 - ✅ Tiene mejor performance
 - ✅ Es más fácil de mantener

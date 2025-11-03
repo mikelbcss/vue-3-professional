@@ -23,6 +23,7 @@ El componente es un **formateador de mensajes** con las siguientes característi
 ## Tareas de Migración
 
 ### 1. **Script Setup y TypeScript**
+
 ```typescript
 <script setup lang="ts">
 // Convierte el componente a script setup con TypeScript
@@ -30,6 +31,7 @@ El componente es un **formateador de mensajes** con las siguientes característi
 ```
 
 ### 2. **Props y Emits**
+
 ```typescript
 // Convierte props usando defineProps<T>()
 const props = defineProps<{
@@ -43,6 +45,7 @@ const emit = defineEmits<{
 ```
 
 ### 3. **Reactividad (ref y reactive)**
+
 ```typescript
 // Convierte data() a ref() para valores primitivos
 const message = ref('')
@@ -51,24 +54,27 @@ const isDarkMode = ref(false)
 ```
 
 ### 4. **Computed Properties**
+
 ```typescript
 // Mantén las computed properties pero actualiza la sintaxis
 const containerClass = computed(() => ({
   'dark-mode': isDarkMode.value,
-  'light-mode': !isDarkMode.value
+  'light-mode': !isDarkMode.value,
 }))
 ```
 
 ### 5. **Watchers**
+
 ```typescript
 // Convierte watchers usando watch()
-watch(message, (newMessage) => {
+watch(message, newMessage => {
   console.log('💬 Message changed:', newMessage)
   // ... lógica del watcher
 })
 ```
 
 ### 6. **Template Refs**
+
 ```typescript
 // Convierte $refs usando ref()
 const messageInput = ref<HTMLInputElement>()
@@ -79,9 +85,11 @@ const focusInput = () => {
 ```
 
 ### 7. **Migración de Filters**
+
 Los filters no existen en Vue 3, tienes dos opciones:
 
 **Opción A: Computed Properties**
+
 ```typescript
 const formattedMessage = computed(() => {
   if (!message.value) return ''
@@ -90,6 +98,7 @@ const formattedMessage = computed(() => {
 ```
 
 **Opción B: Funciones Helper**
+
 ```typescript
 const capitalize = (value: string): string => {
   if (!value) return ''
@@ -98,6 +107,7 @@ const capitalize = (value: string): string => {
 ```
 
 ### 8. **v-bind en CSS (Bonus)**
+
 Puedes usar v-bind para pasar valores reactivos al CSS:
 
 ```vue
@@ -110,6 +120,7 @@ Puedes usar v-bind para pasar valores reactivos al CSS:
 ```
 
 ### 9. **Methods**
+
 ```typescript
 // Convierte methods a funciones normales
 const sendMessage = () => {
@@ -117,7 +128,7 @@ const sendMessage = () => {
     const payload = {
       original: message.value,
       formatted: formatMessage(message.value),
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     }
 
     emit('message-sent', payload)
@@ -129,11 +140,13 @@ const sendMessage = () => {
 ## Pistas Importantes
 
 ### Imports Necesarios
+
 ```typescript
 import { ref, computed, watch, onMounted } from 'vue'
 ```
 
 ### Diferencias Clave
+
 - **No más `this`**: Usa las variables directamente
 - **`.value`**: Necesario para acceder/modificar refs en JavaScript
 - **Template refs**: Usa `ref<HTMLElement>()` con TypeScript
@@ -141,7 +154,9 @@ import { ref, computed, watch, onMounted } from 'vue'
 - **Emits**: `emit('event-name', data)` en lugar de `$emit`
 
 ### Estructura del Template
+
 El template permanece casi igual, solo cambia:
+
 - `ref="messageInput"` sigue igual
 - Reemplaza `{{ message | capitalize | addPrefix }}` con computed o funciones
 - Los event handlers `@click="method"` siguen igual
@@ -149,6 +164,7 @@ El template permanece casi igual, solo cambia:
 ## Resultado Esperado
 
 Al final tendrás un componente Vue 3 moderno que:
+
 - ✅ Usa TypeScript con tipos seguros
 - ✅ Aprovecha la Composition API
 - ✅ Tiene mejor rendimiento sin filters

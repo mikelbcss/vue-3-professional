@@ -1,36 +1,36 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import { useExercisesStore } from '../stores/exercises.ts';
-import { Button, Card, CardContent, Checkbox } from './ui';
-import { Pencil } from 'lucide-vue-next';
-import { useRouter } from 'vue-router';
+import { ref } from 'vue'
+import { useExercisesStore } from '../stores/exercises.ts'
+import { Button, Card, CardContent, Checkbox } from './ui'
+import { Pencil } from 'lucide-vue-next'
+import { useRouter } from 'vue-router'
 
 interface Props {
-  moduleId: string;
-  sectionId: string;
-  exerciseId: string;
-  title: string;
-  description: string;
-  showSolution?: boolean;
+  moduleId: string
+  sectionId: string
+  exerciseId: string
+  title: string
+  description: string
+  showSolution?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
   showSolution: false,
-});
+})
 
-const exercisesStore = useExercisesStore();
-const router = useRouter();
-const showSolutionVisible = ref(false);
+const exercisesStore = useExercisesStore()
+const router = useRouter()
+const showSolutionVisible = ref(false)
 
 const toggleCompletion = () => {
-  exercisesStore.toggleExercise(props.exerciseId);
-};
+  exercisesStore.toggleExercise(props.exerciseId)
+}
 
-const isCompleted = () => exercisesStore.isExerciseCompleted(props.exerciseId);
+const isCompleted = () => exercisesStore.isExerciseCompleted(props.exerciseId)
 
 const goToExercise = () => {
-  router.push(`/modules/${props.moduleId}/${props.sectionId}/${props.exerciseId}`);
-};
+  router.push(`/modules/${props.moduleId}/${props.sectionId}/${props.exerciseId}`)
+}
 </script>
 
 <template>
@@ -51,13 +51,19 @@ const goToExercise = () => {
             <slot name="content">
               <h4 class="font-semibold text-foreground mb-3">📝 Tarea:</h4>
               <div class="prose prose-sm max-w-none text-muted-foreground">
-                <p>Contenido del ejercicio no proporcionado. Usa el slot "content" para añadir el contenido del ejercicio.</p>
+                <p>
+                  Contenido del ejercicio no proporcionado. Usa el slot "content" para añadir el contenido del
+                  ejercicio.
+                </p>
               </div>
             </slot>
           </div>
 
           <!-- Solution Section -->
-          <div v-if="isCompleted() && (showSolutionVisible || props.showSolution)" class="bg-green-50 p-4 rounded-lg border border-green-200 mb-4">
+          <div
+            v-if="isCompleted() && (showSolutionVisible || props.showSolution)"
+            class="bg-green-50 p-4 rounded-lg border border-green-200 mb-4"
+          >
             <h4 class="font-semibold text-green-800 mb-3">✅ Solución:</h4>
             <div class="prose prose-sm max-w-none text-green-700">
               <slot name="solution">
@@ -68,18 +74,11 @@ const goToExercise = () => {
 
           <div class="flex items-center justify-between">
             <div class="flex items-center space-x-2">
-              <Button
-                  @click="goToExercise"
-              >
-                Ir al ejercicio →
-              </Button>
+              <Button @click="goToExercise"> Ir al ejercicio → </Button>
             </div>
 
             <div class="flex items-center space-x-3">
-              <Checkbox
-                  :checked="isCompleted()"
-                  @update:checked="toggleCompletion"
-              />
+              <Checkbox :checked="isCompleted()" @update:checked="toggleCompletion" />
               <span :class="['font-medium', isCompleted() ? 'text-green-700' : 'text-muted-foreground']">
                 {{ isCompleted() ? '✅ Completado' : 'Marcar como completado' }}
               </span>

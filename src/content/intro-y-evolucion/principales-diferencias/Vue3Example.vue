@@ -9,18 +9,18 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed } from 'vue'
 
-const title = ref('Mi Contador');
-const count = ref(0);
+const title = ref('Mi Contador')
+const count = ref(0)
 
-const isEven = computed(() => count.value % 2 === 0);
+const isEven = computed(() => count.value % 2 === 0)
 
 const increment = () => {
-  count.value++;
-};
+  count.value++
+}
 
 const decrement = () => {
-  count.value--;
-};
+  count.value--
+}
 </script>

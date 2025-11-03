@@ -9,6 +9,7 @@ Vue Router 4 representa una evolución significativa respecto a Vue Router 3, di
 ### 1. 🚀 **Inicialización**
 
 **Vue Router 3:**
+
 ```javascript
 import Vue from 'vue'
 import VueRouter from 'vue-router'
@@ -17,23 +18,24 @@ Vue.use(VueRouter)
 
 const router = new VueRouter({
   mode: 'history',
-  routes
+  routes,
 })
 
 new Vue({
   router,
-  render: h => h(App)
+  render: h => h(App),
 }).$mount('#app')
 ```
 
 **Vue Router 4:**
+
 ```javascript
 import { createApp } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
 const router = createRouter({
   history: createWebHistory(),
-  routes
+  routes,
 })
 
 const app = createApp(App)
@@ -44,87 +46,96 @@ app.mount('#app')
 ### 2. 📂 **Cambio en la opción base**
 
 **Vue Router 3:**
+
 ```javascript
 const router = new VueRouter({
   base: process.env.BASE_URL,
-  routes
+  routes,
 })
 ```
 
 **Vue Router 4:**
+
 ```javascript
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
-  routes
+  routes,
 })
 ```
 
 ### 3. 📚 **History**
 
 **Vue Router 3:**
+
 ```javascript
 const router = new VueRouter({
-  mode: 'history',        // o 'hash'
-  routes
+  mode: 'history', // o 'hash'
+  routes,
 })
 ```
 
 **Vue Router 4:**
+
 ```javascript
 import {
-  createWebHistory,     // reemplaza mode: 'history'
+  createWebHistory, // reemplaza mode: 'history'
   createWebHashHistory, // reemplaza mode: 'hash'
-  createMemoryHistory   // para SSR
+  createMemoryHistory, // para SSR
 } from 'vue-router'
 
 const router = createRouter({
   history: createWebHistory(),
-  routes
+  routes,
 })
 ```
 
 ### 4. ❌ **Quitada la opción fallback**
 
 **Vue Router 3:**
+
 ```javascript
 const router = new VueRouter({
   mode: 'history',
-  fallback: false,  // ❌ Ya no existe en v4
-  routes
+  fallback: false, // ❌ Ya no existe en v4
+  routes,
 })
 ```
 
 **Vue Router 4:**
+
 ```javascript
 // La opción fallback se maneja ahora automáticamente
 // según el entorno (browser vs SSR)
 const router = createRouter({
   history: createWebHistory(),
-  routes
+  routes,
 })
 ```
 
-### 5. 🔍 **Quitada * (star o catch-all routes)**
+### 5. 🔍 **Quitada \* (star o catch-all routes)**
 
 **Vue Router 3:**
+
 ```javascript
 const routes = [
   // Catch-all route
-  { path: '*', component: NotFound }
+  { path: '*', component: NotFound },
 ]
 ```
 
 **Vue Router 4:**
+
 ```javascript
 const routes = [
   // Nueva sintaxis para catch-all
-  { path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFound }
+  { path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFound },
 ]
 ```
 
 ### 6. 📍 **La propiedad currentRoute ahora es un ref()**
 
 **Vue Router 3:**
+
 ```javascript
 // currentRoute era un objeto reactivo simple
 console.log(router.currentRoute.name)
@@ -134,12 +145,13 @@ export default {
   computed: {
     currentRouteName() {
       return this.$route.name
-    }
-  }
+    },
+  },
 }
 ```
 
 **Vue Router 4:**
+
 ```javascript
 // currentRoute es ahora un ref()
 console.log(router.currentRoute.value.name)
@@ -155,13 +167,14 @@ export default {
     const currentRouteName = computed(() => route.name)
 
     return { currentRouteName }
-  }
+  },
 }
 ```
 
 ### 7. ⏱️ **Replaced onReady with isReady**
 
 **Vue Router 3:**
+
 ```javascript
 router.onReady(() => {
   console.log('Router is ready!')
@@ -169,6 +182,7 @@ router.onReady(() => {
 ```
 
 **Vue Router 4:**
+
 ```javascript
 // onReady() ya no existe, ahora es async
 router.isReady().then(() => {
@@ -183,6 +197,7 @@ console.log('Router is ready!')
 ### 8. 📜 **scrollBehavior changes**
 
 **Vue Router 3:**
+
 ```javascript
 const router = new VueRouter({
   scrollBehavior(to, from, savedPosition) {
@@ -191,11 +206,12 @@ const router = new VueRouter({
     } else {
       return { x: 0, y: 0 }
     }
-  }
+  },
 })
 ```
 
 **Vue Router 4:**
+
 ```javascript
 const router = createRouter({
   scrollBehavior(to, from, savedPosition) {
@@ -205,35 +221,37 @@ const router = createRouter({
       // Cambió la estructura del objeto retornado
       return { left: 0, top: 0 }
     }
-  }
+  },
 })
 
 // También soporta async scrollBehavior
 const router = createRouter({
   scrollBehavior(to, from, savedPosition) {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       setTimeout(() => {
         resolve({ left: 0, top: 0 })
       }, 500)
     })
-  }
+  },
 })
 ```
 
 ### 9. 🎭 **`<router-view>`, `<keep-alive>`, y `<transition>`**
 
 **Vue Router 3:**
+
 ```vue
 <template>
   <transition name="fade">
     <keep-alive>
-      <router-view/>
+      <router-view />
     </keep-alive>
   </transition>
 </template>
 ```
 
 **Vue Router 4:**
+
 ```vue
 <template>
   <!-- Ahora router-view expone el componente y route -->
@@ -250,7 +268,7 @@ const router = createRouter({
 ## 🎯 **Resumen de migración**
 
 | Concepto            | Vue Router 3          | Vue Router 4                         |
-|---------------------|-----------------------|--------------------------------------|
+| ------------------- | --------------------- | ------------------------------------ |
 | **Creación**        | `new VueRouter()`     | `createRouter()`                     |
 | **History**         | `mode: 'history'`     | `createWebHistory()`                 |
 | **Base URL**        | `base: '/app/'`       | `history: createWebHistory('/app/')` |
@@ -258,7 +276,7 @@ const router = createRouter({
 | **Route actual**    | `router.currentRoute` | `router.currentRoute.value`          |
 | **Router ready**    | `router.onReady()`    | `await router.isReady()`             |
 | **Scroll position** | `{ x: 0, y: 0 }`      | `{ left: 0, top: 0 }`                |
-| **Fallback**        | `fallback: false`     | ❌ Eliminado                          |
+| **Fallback**        | `fallback: false`     | ❌ Eliminado                         |
 
 ## 🚀 **Beneficios de Vue Router 4**
 
