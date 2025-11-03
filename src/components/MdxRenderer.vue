@@ -65,19 +65,8 @@ const mdxComponents = {
 <template>
   <article class="prose prose-sm max-w-none">
     <MDXProvider :components="mdxComponents">
-<<<<<<< HEAD
-      <component
-          :is="props.content as any"
-          v-if="props.content"
-          :components="mdxComponents"
-      />
-      <div v-else class="text-muted-foreground">
-        Cargando contenido...
-      </div>
-=======
       <component :is="props.content" v-if="props.content" :components="mdxComponents" />
       <div v-else class="text-muted-foreground">Cargando contenido...</div>
->>>>>>> upstream/main
     </MDXProvider>
   </article>
 </template>

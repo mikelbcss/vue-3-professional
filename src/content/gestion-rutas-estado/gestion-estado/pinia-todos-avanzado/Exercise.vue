@@ -16,8 +16,8 @@
 
     <!-- Acciones extra -->
     <div class="flex items-center gap-3">
-      <button class="px-3 py-2 rounded border hover:bg-muted" @click="reset()">Reset</button>
-      <span class="text-sm text-muted-foreground">Completadas: {{ completedCount }}</span>
+      <button class="px-3 py-2 rounded border hover:bg-muted" @click="todoStore.clearTodos()">Reset</button>
+      <span class="text-sm text-muted-foreground">Completadas: {{ todoStore.completedTodos.length }}</span>
     </div>
 
     <!-- Buscador por nombre -->
@@ -33,7 +33,7 @@
     <!-- Lista de todos -->
     <ul class="space-y-2">
       <li
-        v-for="todo in filteredTodos"
+        v-for="todo in todoStore.getTodosByName(searchText)"
         :key="todo.id"
         class="flex items-center p-3 bg-white border border-gray-200 rounded-md gap-3"
       >
@@ -44,49 +44,36 @@
     </ul>
 
     <!-- Mensaje si no hay todos -->
-    <p v-if="todos.length === 0" class="text-gray-500 text-center mt-4">No hay tareas aún. ¡Añade tu primera tarea!</p>
+    <p v-if="todoStore.todoList.length === 0" class="text-gray-500 text-center mt-4">No hay tareas aún. ¡Añade tu primera tarea!</p>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+  import { ref } from 'vue'
 
-interface Todo {
-  id: number
-  text: string
-  completed: boolean
-}
+  import type { Todo } from './todo'
+  import { useTodoStore } from './todoStore'
 
-const todos = ref<Todo[]>([])
-const newTodoText = ref('')
-const searchText = ref('')
+  const todoStore = useTodoStore()
 
-function add(text: string) {
-  const newTodo: Todo = { id: Date.now(), text, completed: false }
-  todos.value.push(newTodo)
-}
+  const newTodoText = ref('')
+  const searchText = ref('')
 
-function toggle(id: number) {
-  const t = todos.value.find(t => t.id === id)
-  if (t) t.completed = !t.completed
-}
+  function add(text: string) {
+    const newTodo: Todo = { id: Date.now().toString(), text, completed: false, name: 'todo-item' }
+    todoStore.addTodo(newTodo)
+  }
 
-function reset() {
-  todos.value = []
-}
+  function toggle(id: string) {
+    const t = todoStore.todoList.find(t => t.id === id)
+    if (t) t.completed = !t.completed
+  }
 
-const completedCount = computed(() => todos.value.filter(t => t.completed).length)
 
-const filteredTodos = computed(() => {
-  const q = searchText.value.trim().toLowerCase()
-  if (!q) return todos.value
-  return todos.value.filter(t => t.text.toLowerCase().includes(q))
-})
-
-function handleAdd() {
-  const text = newTodoText.value.trim()
-  if (!text) return
-  add(text)
-  newTodoText.value = ''
+  function handleAdd() {
+    const text = newTodoText.value.trim()
+    if (!text) return
+    add(text)
+    newTodoText.value = ''
 }
 </script>
