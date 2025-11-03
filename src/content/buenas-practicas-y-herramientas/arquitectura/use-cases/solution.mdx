@@ -37,6 +37,7 @@ export class GetTodoQry implements Query<Todo, { id: number }> {
 ```
 
 Puntos clave:
+
 - La clase `GetTodoQry` implementa `Query<Todo, { id: number }>` y expone el método `handle`.
 - Dentro de `handle` hacemos la llamada al API (antes estaba en el componente).
 
@@ -61,7 +62,6 @@ import { GetTodoQry } from '../application/get-todo.qry.ts'
 
 export const useCaseService = new UseCaseService()
 export const getTodoQry = new GetTodoQry()
-
 ```
 
 ### 4) Refactor del componente para usar el caso de uso

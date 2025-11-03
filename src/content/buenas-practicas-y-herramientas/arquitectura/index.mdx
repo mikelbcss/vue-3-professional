@@ -1,0 +1,31 @@
+# 🏢 Arquitectura
+
+Esta sección introduce conceptos de arquitectura orientada a dominio aplicados a Vue 3. Usaremos ejemplos sencillos (como TODOs de jsonplaceholder) solo como hilo conductor, pero el foco está en entender los conceptos y cómo encajan entre sí.
+
+## 📚 Contenido de la sección
+
+- Capas de arquitectura: separación de responsabilidades (delivery, application, domain, infrastructure)
+- Use Cases: orquestación de acciones de aplicación (Queries y Commands)
+- Repository: acceso a datos desacoplado del dominio y de la UI
+
+## 🧱 Capas: responsabilidades y reglas
+
+- Delivery (UI): componentes Vue y routing. Orquestan casos de uso; sin lógica de dominio ni detalles técnicos.
+- Application: casos de uso (Commands/Queries). Coordinan el dominio. Dependen de interfaces, no de implementaciones.
+- Domain: modelos y contratos (p. ej. `Todo`, `TodoRepository`). No depende de infraestructura ni de UI.
+- Infrastructure: detalles técnicos (HTTP, BBDD, mapeos DTO↔dominio, repositorios concretos).
+
+Regla de dependencias (de fuera hacia dentro): Delivery/Infrastructure → Application → Domain. Infrastructure → Domain (pero Domain no importa Infrastructure).
+
+## 🧩 Use Cases (Casos de Uso)
+
+- Encapsulan objetivos de aplicación (p. ej. “obtener todos”).
+- Dos tipos: Query (lectura) y Command (modificación).
+- Se ejecutan a través de un UseCaseService para añadir cross‑cutting concerns (logs, métricas, manejo de errores, timeouts) mediante middlewares.
+- Beneficios: componentes más simples, lógica reusable y testeable sin montar la UI.
+
+## 🗃️ Repository (Repositorio)
+
+- Abstrae la fuente de datos (API, BBDD, memoria…).
+- Contratos claros (p. ej. `FindableAll<T>`) y clientes técnicos (`HttpClient`) facilitan cambios de infraestructura.
+- Beneficios: testabilidad con dobles, cambio de backends sin afectar a la UI ni a la capa de aplicación.

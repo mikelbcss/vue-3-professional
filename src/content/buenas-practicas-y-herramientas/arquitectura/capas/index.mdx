@@ -1,0 +1,36 @@
+En este ejercicio vas a organizar el código del ejemplo de repositorio en cuatro capas: **delivery**, **domain**, **application** e **infrastructure**.
+
+La idea es partir de un componente "monolítico" (con UI + fetch + mapeos) y refactorizarlo separando responsabilidades, de manera que el dominio quede aislado de detalles técnicos.
+
+## Objetivo
+
+- Empezar con un componente que hace `fetch` directo a `https://jsonplaceholder.typicode.com/todos?_limit=5`.
+- Refactorizar distribuyendo el código en capas: delivery, domain, application, infrastructure.
+- Consumir los datos desde la capa de delivery a través de un caso de uso (application), que depende de un repositorio (domain) y éste de una implementación (infrastructure).
+
+## Capas y responsabilidades
+
+- Delivery (UI): componentes Vue. Orquestan casos de uso. No contienen lógica de negocio ni detalles de acceso a datos.
+- Domain: modelos y contratos. No depende de `fetch`, ni de HTTP, ni de librerías de infraestructura.
+- Application: casos de uso (Queries/Commands) que operan con contratos del dominio. No debe conocer la infraestructura.
+- Infrastructure: implementaciones concretas (HTTP, memoria, BBDD). Depende de detalles técnicos y mapea DTO ⇄ Domain.
+
+## Reglas de dependencia (de afuera hacia adentro)
+
+- delivery/infrastructure → application → domain
+- infrastructure → domain (pero domain NO importa infrastructure)
+- application NO importa infrastructure (recibe contratos por constructor)
+
+## Tareas
+
+1. Abre y prueba el componente `Exercise.vue` que hace la llamada directamente en el componente.
+2. Crea la carpeta de capas (por ejemplo dentro de este ejercicio):
+   - `domain/` con lo relacionado con dominio
+   - `application/` con lo relacionado con application.
+   - `infrastructure/` con lo relacionado con infrastructure.
+   - `delivery/` con lo relacionado con delivery.
+
+## Pistas
+
+- El dominio NO debe importar nada de infraestructura ni de Delivery.
+- Application NO debe importar nada de infraestructura ni de Delivery.

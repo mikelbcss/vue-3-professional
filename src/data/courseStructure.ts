@@ -118,22 +118,25 @@ export const courseStructure: CourseStructure = {
           mdxPath: '/src/content/buenas-practicas-y-herramientas/arquitectura/index.mdx',
           exercises: [
             {
-              id: 'capas',
-              title: 'Capas de arquitectura',
-              description: 'Entiende la separación por capas (domain, application, infrastructure, delivery) y sus responsabilidades.',
-              mdxPath: '/src/content/buenas-practicas-y-herramientas/arquitectura/capas/index.mdx',
-            },
-            {
-              id: 'repository',
-              title: 'Repositorio: interfaces e implementaciones',
-              description: 'Define contratos de repositorio y crea implementaciones (API, memoria) para desacoplar el dominio.',
-              mdxPath: '/src/content/buenas-practicas-y-herramientas/arquitectura/repository/index.mdx',
-            },
-            {
               id: 'use-cases',
               title: 'Use Cases: del componente al caso de uso',
               description: 'Refactoriza una llamada HTTP del componente a un Caso de Uso ejecutado por UseCaseService.',
               mdxPath: '/src/content/buenas-practicas-y-herramientas/arquitectura/use-cases/index.mdx',
+            },
+            {
+              id: 'repository',
+              title: 'Repositorio: interfaces e implementaciones',
+              description:
+                'Define contratos de repositorio y crea implementaciones (API, memoria) para desacoplar el dominio.',
+              mdxPath: '/src/content/buenas-practicas-y-herramientas/arquitectura/repository/index.mdx',
+            },
+
+            {
+              id: 'capas',
+              title: 'Capas de arquitectura',
+              description:
+                'Entiende la separación por capas (domain, application, infrastructure, delivery) y sus responsabilidades.',
+              mdxPath: '/src/content/buenas-practicas-y-herramientas/arquitectura/capas/index.mdx',
             },
           ],
         },

@@ -1,0 +1,152 @@
+## Refactor: del componente al Repositorio (Repository)
+
+Vamos a extraer la obtención de datos a una **capa de repositorio**, y haremos que un **Caso de Uso (Query)** dependa de ese repositorio. Así desacoplamos la UI de detalles como `fetch`, URLs y mapeos de DTOs.
+
+> Nota: Los siguientes bloques de código son snippets autocontenidos para explicar el patrón. No requieren ni hacen referencia a archivos reales del proyecto; por eso evitamos imports relativos y ponemos todo lo necesario en cada bloque.
+
+### 1) Modelos: Dominio vs DTO
+
+```ts
+// todo.ts
+export interface Todo {
+  userId: number
+  id: number
+  title: string
+  completed: boolean
+}
+
+// todo.dto.ts
+export interface TodoDto {
+  userId: number
+  id: number
+  title: string
+  completed: boolean
+}
+```
+
+Para `jsonplaceholder` el DTO coincide con el dominio, pero mantenerlos separados facilita cambios futuros o normalización.
+
+### 2) Contratos genéricos y HttpClient
+
+```ts
+// findable-all.ts
+export interface FindableAll<Result> {
+  findAll(): Promise<Result[]>
+}
+
+// http-client.ts
+export interface HttpClient {
+  get<T>(path: string): Promise<T>
+}
+
+// fetch-http-client.ts
+export class FetchHttpClient implements HttpClient {
+  constructor(private readonly baseUrl: string) {}
+
+  async get<T>(path: string): Promise<T> {
+    const url = this.baseUrl + '/' + path
+    const res = await fetch(url)
+    if (!res.ok) throw new Error(`HTTP ${res.status}`)
+    return (await res.json()) as T
+  }
+}
+```
+
+### 3) Repositorio de Todos (contrato + implementación API)
+
+```ts
+// todo.repository.ts
+export interface TodoRepository extends FindableAll<Todo> {}
+```
+
+```ts
+// todo-api.repository.ts
+export class TodoApiRepository implements TodoRepository {
+  constructor(private readonly httpClient: HttpClient) {}
+
+  async findAll(): Promise<Todo[]> {
+    const dtos = await this.httpClient.get<TodoDto[]>('todos?_limit=5')
+    // Aquí podrías transformar si hiciera falta. En este caso, el DTO ya es válido.
+    return dtos.map(dto => ({ ...dto }))
+  }
+}
+```
+
+### 4) Caso de Uso (Query) que depende del repositorio
+
+```ts
+// use-case.ts
+export interface UseCase<In, Out> {
+  handle(input?: In): Promise<Out>
+}
+export type Query<Out, In = void> = UseCase<In, Out>
+```
+
+```ts
+// get-todos.qry.ts
+export interface Query<Out, In = void> {
+  handle(input?: In): Promise<Out>
+}
+
+export class GetTodosQry implements Query<Todo[]> {
+  constructor(private readonly repo: TodoRepository) {}
+
+  async handle(): Promise<Todo[]> {
+    return this.repo.findAll()
+  }
+}
+```
+
+### 5) Contenedor mínimo (composición de dependencias)
+
+```ts
+// container.ts
+export const httpClient = new FetchHttpClient('https://jsonplaceholder.typicode.com')
+export const todoRepository = new TodoApiRepository(httpClient)
+export const getTodosQry = new GetTodosQry(todoRepository)
+```
+
+### 6) Componente refactorizado: usa el Caso de Uso (que usa el Repositorio)
+
+```vue
+<template>
+  <div class="max-w-2xl mx-auto p-6 space-y-4">
+    <h1 class="text-2xl font-bold">Repository: del componente al repositorio</h1>
+
+    <div class="border rounded-md p-4 bg-white">
+      <div class="flex items-center justify-between">
+        <h2 class="font-semibold">Resultado</h2>
+        <button class="px-3 py-1.5 text-sm rounded bg-blue-600 text-white hover:bg-blue-700" @click="loadTodos">
+          Volver a cargar
+        </button>
+      </div>
+
+      <div class="mt-3">
+        <pre class="text-sm whitespace-pre-wrap">{{ pretty(todos) }}</pre>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { onMounted, ref } from 'vue'
+
+const todos = ref<Todo[]>([])
+
+function pretty(value: unknown) {
+  return JSON.stringify(value, null, 2)
+}
+
+async function loadTodo() {
+  todo.value = await useCaseService.execute(getTodosQry)
+}
+
+onMounted(loadTodos)
+</script>
+```
+
+### Beneficios del patrón
+
+- La UI deja de conocer rutas y detalles HTTP: solo invoca un Caso de Uso.
+- El Caso de Uso no conoce HTTP: solo pide datos a un repositorio (interfaz), lo que facilita tests dobles y cambios de infraestructura (API ↔ memoria).
+- Puedes añadir middlewares o políticas transversales en el `HttpClient` (logs, reintentos, auth).

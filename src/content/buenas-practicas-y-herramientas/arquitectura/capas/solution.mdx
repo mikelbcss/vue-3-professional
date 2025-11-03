@@ -1,0 +1,28 @@
+## Solución propuesta: separación por capas
+
+A continuación se muestra una posible organización en cuatro capas (delivery, domain, application, infrastructure) tomando como base el ejercicio de repositorio para TODOs.
+
+### Estructura de carpetas sugerida
+
+```
+capas/
+├─ delivery/
+│  └─ TodosView.vue
+├─ domain/
+│  ├─ todo.ts
+│  └─ todo.repository.ts
+├─ application/
+│  └─ get-todos.qry.ts
+├─ infrastructure/
+│  ├─ http-client.ts
+│  └─ todo-api.repository.ts
+└─ container.ts
+```
+
+## Puntos clave de la solución
+
+- El dominio no depende de ninguna librería ni detalle técnico.
+- Application orquesta el trabajo usando contratos del dominio, sin conocer la infraestructura concreta.
+- Infrastructure contiene implementaciones técnicas (HTTP) y mapeos.
+- Delivery usa los casos de uso desde la UI. El wiring de dependencias se hace en un contenedor aparte.
+

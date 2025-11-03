@@ -11,15 +11,15 @@
       </div>
 
       <div class="mt-3">
-        <pre class="text-sm whitespace-pre-wrap">{{ pretty(todo) }}</pre>
+        <pre class="text-sm whitespace-pre-wrap">{{ pretty }}</pre>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
-import { useCaseService, getTodoQry } from './core/container'
+import { computed, onMounted, ref } from 'vue'
+import { useCaseService, getTodoQry } from './container.ts'
 
 interface TodoDto {
   userId: number
@@ -30,9 +30,7 @@ interface TodoDto {
 
 const todo = ref<TodoDto | null>(null)
 
-function pretty(value: unknown) {
-  return JSON.stringify(value, null, 2)
-}
+const pretty = computed(() => JSON.stringify(todo.value, null, 2))
 
 async function loadTodo() {
   todo.value = await useCaseService.execute(getTodoQry, { id: 1 })

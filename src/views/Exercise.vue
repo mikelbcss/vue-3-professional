@@ -112,6 +112,7 @@ watch([() => props.moduleId, () => props.sectionId, () => props.exerciseId], loa
       <div class="flex items-center justify-between p-4 bg-muted/30 rounded-lg">
         <div class="flex items-center space-x-3">
           <Button
+            data-testid="exercise-toggle"
             :variant="isCompleted ? 'default' : 'outline'"
             size="sm"
             class="w-8 h-8 p-0"
@@ -120,7 +121,10 @@ watch([() => props.moduleId, () => props.sectionId, () => props.exerciseId], loa
             <Check v-if="isCompleted" class="w-4 h-4" />
             <Square v-else class="w-4 h-4" />
           </Button>
-          <span :class="['font-medium', isCompleted ? 'text-green-700' : 'text-muted-foreground']">
+          <span
+            data-testid="exercise-status"
+            :class="['font-medium', isCompleted ? 'text-green-700' : 'text-muted-foreground']"
+          >
             {{ isCompleted ? 'Completado' : 'Marcar como completado' }}
           </span>
         </div>

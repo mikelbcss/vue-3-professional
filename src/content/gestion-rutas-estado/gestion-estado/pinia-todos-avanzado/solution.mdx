@@ -8,6 +8,7 @@ export interface Todo {
   text: string
   completed: boolean
 }
+
 export interface State {
   todos: Todo[]
 }
@@ -17,11 +18,11 @@ export const useTodosStore = defineStore('todos-advanced', () => {
 
   const completedCount = computed(() => todos.value.filter(t => t.completed).length)
 
-  const getTodosByName = (name: string) => {
+  const getTodosByName = computed(() => (name: string) => {
     const q = name.trim().toLowerCase()
     if (!q) return todos.value
     return todos.value.filter(t => t.text.toLowerCase().includes(q))
-  }
+  })
 
   const addTodo = (text: string) => {
     const trimmed = text.trim()
@@ -50,7 +51,6 @@ export const useTodosStore = defineStore('todos-advanced', () => {
 ```
 
 ```vue
-<!-- Exercise.vue (refactor a Pinia) -->
 <template>
   <div class="max-w-2xl mx-auto p-6 space-y-6">
     <h1 class="text-2xl font-bold">Lista de Tareas (Pinia)</h1>
@@ -86,7 +86,7 @@ export const useTodosStore = defineStore('todos-advanced', () => {
     <!-- Lista de todos -->
     <ul class="space-y-2">
       <li
-        v-for="todo in filteredTodos"
+        v-for="todo in getTodosByName(searchText)"
         :key="todo.id"
         class="flex items-center p-3 bg-white border border-gray-200 rounded-md gap-3"
       >
@@ -106,7 +106,7 @@ import { storeToRefs } from 'pinia'
 import { useTodosStore } from './todos.store'
 
 const store = useTodosStore()
-const { todos, completedCount } = storeToRefs(store) // ✅ extrae refs del store
+const { todos, completedCount, getTodosByName } = storeToRefs(store) // ✅ extrae refs del store
 
 const newTodoText = ref('')
 const searchText = ref('')
@@ -117,10 +117,6 @@ function handleAdd() {
   store.addTodo(text) // ✅ acción del store
   newTodoText.value = ''
 }
-
-const filteredTodos = computed(() => {
-  return store.getTodosByName(searchText.value)
-})
 </script>
 ```
 
@@ -128,4 +124,4 @@ const filteredTodos = computed(() => {
 
 - `storeToRefs(store)` convierte el estado y getters en refs reactivas; las acciones permanecen como funciones en el objeto `store`.
 - El `reset()` usa `this.$reset()` porque el store está definido con Options API.
-- El getter con parámetro se define como una función que retorna otra función para poder pasar argumentos.
+- El getter con parámetro se define como una computed que retorna una función para poder pasar argumentos.

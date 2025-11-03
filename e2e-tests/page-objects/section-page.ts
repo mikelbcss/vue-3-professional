@@ -1,7 +1,7 @@
 import { expect, Locator, Page } from '@playwright/test'
 
 export class SectionPage {
-  readonly exerciseCards =  this.page.locator('main .grid >> .cursor-pointer')
+  readonly exerciseCards = this.page.locator('main .grid >> .cursor-pointer')
 
   constructor(private readonly page: Page) {}
 

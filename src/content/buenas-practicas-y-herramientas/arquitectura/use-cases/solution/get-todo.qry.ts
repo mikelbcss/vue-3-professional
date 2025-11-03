@@ -1,4 +1,4 @@
-import type { Query } from '../core/use-cases/use-case.ts'
+import type { Query } from './use-case.ts'
 
 export interface Todo {
   userId: number

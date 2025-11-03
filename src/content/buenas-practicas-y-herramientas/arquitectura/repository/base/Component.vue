@@ -19,24 +19,23 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
+import { useCaseService, getTodoQry } from './container.ts'
 
-interface Todo {
+interface TodoDto {
   userId: number
   id: number
   title: string
   completed: boolean
 }
 
-const todo = ref<Todo | null>(null)
+const todo = ref<TodoDto | null>(null)
 
 function pretty(value: unknown) {
   return JSON.stringify(value, null, 2)
 }
 
 async function loadTodo() {
-  const res = await fetch(`https://jsonplaceholder.typicode.com/todos/1`)
-  if (!res.ok) throw new Error(`HTTP ${res.status}`)
-  todo.value = (await res.json()) as Todo
+  todo.value = await useCaseService.execute(getTodoQry, { id: 1 })
 }
 
 onMounted(loadTodo)

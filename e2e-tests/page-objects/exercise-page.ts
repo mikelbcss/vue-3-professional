@@ -17,7 +17,7 @@ export class ExercisePage {
     await this.toggleButton.click()
   }
 
-    private async ensureLoaded() {
-        await expect(this.completionRow).toBeVisible()
-    }
+  private async ensureLoaded() {
+    await expect(this.completionRow).toBeVisible()
+  }
 }

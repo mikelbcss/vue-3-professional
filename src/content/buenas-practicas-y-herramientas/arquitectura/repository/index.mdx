@@ -1,0 +1,32 @@
+En este ejercicio, partimos de un componente que hace peticiones HTTP directamente a `jsonplaceholder` para obtener una lista de TODOS. Tu objetivo es introducir una capa de **Repositorio** y consumirla desde un **Caso de Uso (Use Case)**, desacoplando la UI de los detalles de infraestructura.
+
+## Objetivo
+
+- Empezar con un componente que hace `fetch` directamente a `https://jsonplaceholder.typicode.com/todos`.
+- Crear un **Repositorio de Todos** (`TodoRepository`) con una implementación HTTP (`TodoApiRepository`).
+- Refactorizar el **Caso de Uso** para que dependa del repositorio (no de `fetch`).
+- Consumir el Caso de Uso desde el componente.
+
+## Conceptos clave
+
+- Repository: Abstracción que separa el dominio de la infraestructura (API, BBDD, memoria, etc.).
+- Contratos genéricos: `FindableAll<T>` para listar elementos, etc.
+- DTO vs Dominio: En la capa de infraestructura tratamos con DTOs (datos de transporte); el dominio usa sus propios modelos.
+- HttpClient: Pequeña abstracción para centralizar llamadas y facilitar testeo/middlewares.
+
+## Tareas
+
+1. Abre y prueba el componente `Exercise.vue` que hace la llamada directamente en el componente.
+2. Define el contrato de repositorio `TodoRepository` que permita listar todos (`findAll(): Promise<Todo[]>`).
+3. Define un `HttpClient` mínimo y su implementación basada en `fetch`.
+4. Crea la implementación `TodoApiRepository` que use el `HttpClient` y mapee de `TodoDto` a `Todo`.
+5. Crea/refactoriza un Caso de Uso `GetTodosQry` que dependa del repositorio (no haga `fetch` directo).
+6. Compón un pequeño contenedor para instanciar `HttpClient`, `TodoApiRepository` y `GetTodosQry`.
+7. Refactoriza el componente para pedir los datos a través del Caso de Uso.
+
+## Pistas
+
+- `FindableAll<Result>` puede ser algo como: `findAll(): Promise<Result[]>`.
+- `TodoDto` puede ser prácticamente igual a `Todo` para este ejercicio (jsonplaceholder ya retorna la forma esperada).
+- Mantén las piezas como clases simples: inyecta dependencias por constructor.
+- Inspírate en el ejercicio de Use Cases: la diferencia clave es que el Query llamará al repositorio.

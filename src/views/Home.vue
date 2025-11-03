@@ -97,7 +97,7 @@ const openVueDocs = () => {
               <div class="space-y-4">
                 <div class="flex justify-between items-center">
                   <span class="text-muted-foreground">Ejercicios completados:</span>
-                  <span class="font-bold text-foreground">
+                  <span data-testid="progress-count" class="font-bold text-foreground">
                     {{ exercisesStore.completedCount }} / {{ exercisesStore.totalExercises }}
                   </span>
                 </div>
