@@ -22,15 +22,21 @@ const ExerciseComponent = shallowRef<Component | null>(null);
 const showSolution = ref(false);
 
 const module = computed(() => {
-  return courseStructure.modules.find((m) => m.id === props.moduleId)!;
+  const found = courseStructure.modules.find((m) => m.id === props.moduleId);
+  if (!found) throw new Error(`Module not found: ${props.moduleId}`);
+  return found;
 });
 
 const section = computed(() => {
-  return module.value?.sections.find((s) => s.id === props.sectionId)!;
+  const found = module.value.sections.find((s) => s.id === props.sectionId);
+  if (!found) throw new Error(`Section not found: ${props.sectionId}`);
+  return found;
 });
 
 const exercise = computed(() => {
-  return section.value?.exercises.find((e) => e.id === props.exerciseId)!;
+  const found = section.value.exercises.find((e) => e.id === props.exerciseId);
+  if (!found) throw new Error(`Exercise not found: ${props.exerciseId}`);
+  return found;
 });
 
 const isCompleted = computed(() => exercisesStore.isExerciseCompleted(props.exerciseId));

@@ -42,7 +42,8 @@ onMounted(loadContent);
 watch([() => props.moduleId, () => props.sectionId], loadContent);
 
 const navigateToExercise = (exerciseId: string) => {
-  router.push(`/modules/${props.moduleId}/${section.value!.id}/${exerciseId}`);
+  if (!section.value) throw new Error('Section not found')
+  router.push(`/modules/${props.moduleId}/${section.value.id}/${exerciseId}`);
 };
 </script>
 

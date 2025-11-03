@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, shallowRef } from 'vue';
+import { type Component, onMounted, ref, shallowRef } from 'vue';
 import { Card, CardContent, Tabs, TabsList, TabsTrigger } from './ui';
 import CodeBlock from './CodeBlock.vue';
 
@@ -15,8 +15,8 @@ const props = defineProps<Props>();
 const activeTab = ref<'left' | 'right'>('left');
 const leftCode = ref('');
 const rightCode = ref('');
-const LeftComponent = shallowRef<any>(null);
-const RightComponent = shallowRef<any>(null);
+const LeftComponent = shallowRef<Component | null>(null);
+const RightComponent = shallowRef<Component | null>(null);
 
 // Use import.meta.glob to get all Vue components (using relative paths that Vite can resolve)
 const componentModules = import.meta.glob('/src/content/**/*.vue', { eager: false });
@@ -36,12 +36,12 @@ onMounted(async () => {
     const leftGlobPath = getGlobPath(props.leftComponent);
 
     if (componentModules[leftGlobPath]) {
-      const leftModule = (await componentModules[leftGlobPath]()) as any;
+      const leftModule = (await componentModules[leftGlobPath]()) as { default: Component };
       LeftComponent.value = leftModule.default;
     }
 
     if (componentRawModules[leftGlobPath]) {
-      const leftRaw = (await componentRawModules[leftGlobPath]()) as any;
+      const leftRaw = (await componentRawModules[leftGlobPath]()) as { default: string };
       leftCode.value = leftRaw.default;
     }
   } catch (error) {
@@ -52,7 +52,7 @@ onMounted(async () => {
     const rightGlobPath = getGlobPath(props.rightComponent);
 
     if (componentModules[rightGlobPath]) {
-      const rightModule = (await componentModules[rightGlobPath]()) as any;
+      const rightModule = (await componentModules[rightGlobPath]()) as { default: Component };
       RightComponent.value = rightModule.default;
     } else {
       console.error('Right component not found:', rightGlobPath);
@@ -61,7 +61,7 @@ onMounted(async () => {
     }
 
     if (componentRawModules[rightGlobPath]) {
-      const rightRaw = (await componentRawModules[rightGlobPath]()) as any;
+      const rightRaw = (await componentRawModules[rightGlobPath]()) as { default: string };
       rightCode.value = rightRaw.default;
     } else {
       console.error('Right component raw not found:', rightGlobPath);

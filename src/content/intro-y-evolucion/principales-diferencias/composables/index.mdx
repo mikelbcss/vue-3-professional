@@ -1,0 +1,30 @@
+## Objetivo
+
+Extrae la lógica repetida (solo `step`, `increment` y `decrement`) a un composable reutilizable `useStepCounter` y úsalo en ambos componentes. Mantén el ejercicio lo más simple posible.
+
+### Punto de partida
+
+- Hay dos componentes con la misma lógica local (duplicada):
+  - `CounterA.vue`
+  - `CounterB.vue`
+- En `Exercise.vue` se muestran ambos.
+
+### Tareas
+
+1. Crea `useStepCounter.ts` en esta misma carpeta.
+2. Mueve la lógica reactiva (estado, acciones y computed) al composable.
+3. Refactoriza `CounterA.vue` y `CounterB.vue` para usar `useStepCounter` con distintas opciones de `initial` y `step`.
+4. Verifica que cada contador funciona de forma independiente.
+
+### Requisitos mínimos
+
+- API sugerida: `useStepCounter(options)`
+  - `options`: `{ initial: number; step?: number }`
+  - Debe devolver al menos: `{ count, increment, decrement, reset, isEven }`
+- No añadas dependencias externas.
+- No añadas `min/max`, ni `wrap`, `clamp` ni normalizaciones.
+
+### Notas
+
+- Mantén el UI actual, eliminando indicadores de límites si existían.
+- Cada llamada a `useStepCounter()` debe crear su propio estado.

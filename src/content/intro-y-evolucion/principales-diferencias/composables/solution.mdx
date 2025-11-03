@@ -1,0 +1,92 @@
+```ts
+// useStepCounter.ts
+import { computed, ref } from 'vue'
+
+export interface UseStepCounterOptions {
+  initial: number
+  step?: number
+}
+
+export function useStepCounter(options: UseStepCounterOptions) {
+  const step = options.step ?? 1
+  const count = ref<number>(options.initial)
+
+  function set(n: number) {
+    count.value = n
+  }
+
+  function increment() {
+    set(count.value + step)
+  }
+
+  function decrement() {
+    set(count.value - step)
+  }
+
+  function reset() {
+    set(options.initial)
+  }
+
+  const isEven = computed(() => count.value % 2 === 0)
+
+  return { count, increment, decrement, reset, isEven }
+}
+```
+
+```vue
+<!-- CounterA.vue (refactorizado) -->
+<template>
+  <div class="space-y-3 p-4 rounded border">
+    <h3 class="text-base font-semibold">Contador A</h3>
+    <div class="flex items-center justify-between">
+      <p>Valor: <strong>{{ count }}</strong></p>
+      <span class="text-xs text-muted-foreground" v-if="isEven">Es par</span>
+    </div>
+    <div class="flex gap-2">
+      <button class="px-3 py-1 rounded bg-primary text-primary-foreground" @click="increment">+{{ step }}</button>
+      <button class="px-3 py-1 rounded bg-secondary text-secondary-foreground" @click="decrement">-{{ step }}</button>
+      <button class="px-3 py-1 rounded border" @click="reset">Reset</button>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { useStepCounter } from './useStepCounter'
+
+const step = 1
+const { count, increment, decrement, reset, isEven } = useStepCounter({
+  initial: 0,
+  step,
+})
+</script>
+```
+
+```vue
+<!-- CounterB.vue (refactorizado) -->
+<template>
+  <div class="space-y-3 p-4 rounded border">
+    <h3 class="text-base font-semibold">Contador B</h3>
+    <div class="flex items-center justify-between">
+      <p>Valor: <strong>{{ count }}</strong></p>
+      <span class="text-xs text-muted-foreground" v-if="isEven">Es par</span>
+    </div>
+    <div class="flex gap-2">
+      <button class="px-3 py-1 rounded bg-primary text-primary-foreground" @click="increment">+{{ step }}</button>
+      <button class="px-3 py-1 rounded bg-secondary text-secondary-foreground" @click="decrement">-{{ step }}</button>
+      <button class="px-3 py-1 rounded border" @click="reset">Reset</button>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { useStepCounter } from './useStepCounter'
+
+const step = 2
+const { count, increment, decrement, reset, isEven } = useStepCounter({
+  initial: 10,
+  step,
+})
+</script>
+```
+
+> Nota: Cada uso de `useStepCounter()` crea un estado independiente. No hay límites `min/max` ni modos de normalización; solo `initial`, `step`, `increment`, `decrement` y `reset`.

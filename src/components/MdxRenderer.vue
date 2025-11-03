@@ -9,25 +9,23 @@ interface Props {
 
 const props = defineProps<Props>();
 
-// Custom wrapper implemented as a proper Vue component
 const CodeWithProps = defineComponent({
   name: 'CodeWithProps',
   setup(p, { slots }) {
     return () => {
       // Extract code content from children or slots
-      const children = (p as any).children ?? (slots.default && slots.default());
+      const children = (p as any).children ?? (slots.default?.());
       let code = '' as string;
       let language = 'javascript' as string;
 
       if (children) {
         if (Array.isArray(children)) {
           const codeChild = children.find(
-            (child: any) => (child && child.type === 'code') || (child.props && child.props.className)
+            (child: any) => (child && child.type === 'code') || (child.props?.className)
           );
           if (codeChild) {
             if (
-              codeChild.props &&
-              codeChild.props.className &&
+              codeChild.props?.className &&
               typeof codeChild.props.className === 'string'
             ) {
               const match = codeChild.props.className.match(/language-(\w+)/);
@@ -62,7 +60,7 @@ const CodeWithProps = defineComponent({
       return h(CodeBlock, {
         code,
         language,
-        class: ((p as any).class ?? '') + ' not-prose',
+        class: `${(p as any).class ?? ''} not-prose`,
       });
     };
   },

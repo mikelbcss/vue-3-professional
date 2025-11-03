@@ -57,6 +57,13 @@ export const courseStructure: CourseStructure = {
               mdxPath:
                 '/src/content/intro-y-evolucion/principales-diferencias/conceptos-combinados/index.mdx',
             },
+            {
+              id: 'composables',
+              title: 'Extrayendo lógica a Composables',
+              description: 'Refactoriza un componente para extraer la lógica a un composable (useCounter)',
+              mdxPath:
+                '/src/content/intro-y-evolucion/principales-diferencias/composables/index.mdx',
+            },
           ],
         },
       ],
@@ -73,13 +80,13 @@ export const courseStructure: CourseStructure = {
           title: 'Gestion de rutas con Vue Router 4',
           mdxPath: '/src/content/gestion-rutas-estado/gestion-rutas/index.mdx',
           exercises: [
-              {
-                  id: 'definiendo-router',
-                  title: 'Migrar de Vue Router 3 a Vue Router 4',
-                  description: 'Migra de Vue Router 3 a Vue Router 4 usando sus nuevos APIs',
-                  mdxPath:
-                      '/src/content/gestion-rutas-estado/gestion-rutas/definiendo-router/index.mdx',
-              },
+            {
+              id: 'definiendo-router',
+              title: 'Migrar de Vue Router 3 a Vue Router 4',
+              description: 'Migra de Vue Router 3 a Vue Router 4 usando sus nuevos APIs',
+              mdxPath:
+                '/src/content/gestion-rutas-estado/gestion-rutas/definiendo-router/index.mdx',
+            },
           ],
         },
         {
@@ -104,7 +111,14 @@ export const courseStructure: CourseStructure = {
       description:
         'Patrones recomendados, tooling y flujos de trabajo para proyectos Vue 3 profesionales.',
       mdxPath: '/src/content/buenas-practicas-y-herramientas/index.mdx',
-      sections: [],
+      sections: [
+        {
+          id: 'configuracion',
+          title: 'Mejores prácticas de configuración',
+          mdxPath: '/src/content/buenas-practicas-y-herramientas/configuracion/index.mdx',
+          exercises: [],
+        },
+      ],
     },
   ],
 };

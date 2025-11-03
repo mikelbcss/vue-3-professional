@@ -34,15 +34,20 @@ interface User {
 
 const title = 'Perfil de Usuario Completo con Reactive'
 
-const user = reactive<User>({
-  name: 'Juan',
-  age: 25,
-  email: 'juan@example.com',
-  address: {
-    city: 'Madrid',
-    country: 'España'
-  }
-})
+const user = reactive<User>(getDefaultUser())
+
+function getDefaultUser(): User {
+  const user: User = {
+    name: 'Juan',
+    age: 25,
+    email: 'juan@example.com',
+    address: {
+      city: 'Madrid',
+      country: 'España',
+    }
+  };
+  return user
+}
 
 const updateName = () => {
   user.name = 'María'
@@ -62,11 +67,12 @@ const updateAddress = () => {
 }
 
 const reset = () => {
-  user.name = 'Juan'
-  user.age = 25
-  user.email = 'juan@example.com'
-  user.address.city = 'Madrid'
-  user.address.country = 'España'
+  const { name, age, email, address: { country, city }} = getDefaultUser();
+  user.name = name
+  user.age = age
+  user.email = email
+  user.address.city = city
+  user.address.country = country
 }
 
 const isAdult = computed(() => user.age >= 18)
